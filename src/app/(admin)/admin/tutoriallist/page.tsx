@@ -68,7 +68,7 @@ const TutorialList = async () => {
                         />
                         <Link
                           href={`/admin/tutoriallist/${item.language}`}
-                          className=" text-white font-bold underlinebg-blue-500 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full cursor-pointer my-2"
+                          className=" text-white font-bold underlinebg-blue-500 bg-blue-500 hover:bg-blue-600 py-2 px-4 rounded-full cursor-pointer my-2"
                         >
                           View
                         </Link>
