@@ -9,11 +9,7 @@ export interface SlugType {
   langslug: string;
 }
 
-
 const getTutorialHeading = async (params: any) => {
-  "use server";
-  // console.log("==========================================")
-  // console.log(params)
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistget/${params}`,
     {
@@ -26,11 +22,9 @@ const getTutorialHeading = async (params: any) => {
   );
   const result = await res.json();
   return result;
-}
+};
 
 const getContent = async (slug: any) => {
-  "use server";
-
   const res = await fetch(
     `http://localhost:3000/api/tutorialcontentget/${slug}`,
     {
@@ -39,21 +33,12 @@ const getContent = async (slug: any) => {
     }
   );
   const result = await res.json();
-  // console.log(result)
   return result;
 };
 
 const Html = async ({ params }: { params: SlugType }) => {
   const data = await getTutorialHeading(params.slug);
   const content = await getContent(params.langslug);
-
-  // console.log(content);
-  // console.log(params)
-
-  // if(content.data.length == 0) {
-  //   redirect('/');
-  // }
-
   return (
     <>
       <Header />
@@ -92,11 +77,9 @@ const Html = async ({ params }: { params: SlugType }) => {
           </ul>
         </div>
         <section className="container p-10 mx-auto overflow-auto">
-            
           <div className="container">
             <MDXComponents source={content?.data[0]?.content} />
           </div>
-
         </section>
       </div>
 

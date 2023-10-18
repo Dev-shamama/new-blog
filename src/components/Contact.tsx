@@ -2,20 +2,16 @@ import React from "react";
 import { Chat, FaceBook, Instagarm, Twitter } from "./Icon";
 
 const contactPostHandler = async (formData: FormData) => {
-  "use server";
-
-  const name = formData.get("name");
-  const email = formData.get("email");
-  const message = formData.get("message");
-
-
-  const res = await fetch("http://localhost:3000/api/contact/create", {
-    method: "POST",
-    body: JSON.stringify({ name, email, message }),
-    headers: { "content-type": "application/json" },
-  });
-  const result = await res.json();
-  console.log(result);
+  // "use server";
+  // const name = formData.get("name");
+  // const email = formData.get("email");
+  // const message = formData.get("message");
+  // const res = await fetch("http://localhost:3000/api/contact/create", {
+  //   method: "POST",
+  //   body: JSON.stringify({ name, email, message }),
+  //   headers: { "content-type": "application/json" },
+  // });
+  // const result = await res.json();
 };
 
 const Contact = () => {
@@ -30,7 +26,9 @@ const Contact = () => {
             Please don't hesitate to contact us here.
           </p>
         </div>
-        <form action={contactPostHandler} className="lg:w-1/2 md:w-2/3 mx-auto">
+        <form 
+        // action={contactPostHandler}
+         className="lg:w-1/2 md:w-2/3 mx-auto">
           <div className="flex flex-wrap -m-2">
             <div className="p-2 w-1/2">
               <div className="relative">

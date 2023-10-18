@@ -5,27 +5,30 @@ import Link from "next/link";
 import { ArrowRight } from "@/components/Icon";
 import readingTime from "reading-time";
 
-const Fblog = async () => {
-  // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogget`, {
-  //   method: "GET",
-  // });
-  // const result = await res.json();
+const getBlogData = async () =>{
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogget`);
+  const result = await res.json();
+  return result
+}
 
+const Fblog = async () => {
+  const result = await getBlogData();
+  console.log(result);
   return (
     <>
       <Header />
       <section className="text-gray-400 bg-gray-900 body-font">
         <div className="container px-40 md:px-10 py-24 mx-auto">
           <div className="-my-8 divide-y-2 divide-gray-800">
-            {/* <div className="py-8 flex flex-col flex-wrap md:flex-nowrap">
-              {result?.data && result?.data?.length === 0 ? (
+            <div className="py-8 flex flex-col flex-wrap md:flex-nowrap">
+              {result && result?.data?.length === 0 ? (
                 <div
                   className="md:flex-grow  mb-6 bg-slate-700 p-6"
                 >
                   <h1>Not Found</h1>
                 </div>
               ) : (
-                result?.data.map((item: any) => (
+                result && result?.data.map((item: any) => (
                   <div
                     className="md:flex-grow  mb-6 bg-slate-700 p-6"
                     key={item._id}
@@ -58,7 +61,7 @@ const Fblog = async () => {
                   </div>
                 ))
               )}
-            </div> */}
+            </div>
           </div>
         </div>
       </section>

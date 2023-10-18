@@ -14,8 +14,6 @@ export interface SlugType {
 }
 
 const getTutorialHeading = async (params: any) => {
-  "use server";
-
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistget/${params.slug}`,
     {
@@ -31,25 +29,25 @@ const getTutorialHeading = async (params: any) => {
 };
 
 const createListAdd = async (formData: FormData) => {
-  "use server";
+  // "use server";
 
-  const heading = formData.get("heading");
-  const title = formData.get("title");
-  const slug = formData.get("slug");
-  const langSlug = formData.get("id");
+  // const heading = formData.get("heading");
+  // const title = formData.get("title");
+  // const slug = formData.get("slug");
+  // const langSlug = formData.get("id");
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistcreateHeading/${langSlug}`,
-    {
-      method: "POST",
-      body: JSON.stringify({ heading, title, slug }),
-      headers: { "content-type": "application/json" },
-    }
-  );
-  const result = await res.json();
-  if (result.success === true) {
-    revalidateTag("change");
-  }
+  // const res = await fetch(
+  //   `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistcreateHeading/${langSlug}`,
+  //   {
+  //     method: "POST",
+  //     body: JSON.stringify({ heading, title, slug }),
+  //     headers: { "content-type": "application/json" },
+  //   }
+  // );
+  // const result = await res.json();
+  // if (result.success === true) {
+  //   revalidateTag("change");
+  // }
 };
 
 const page = async ({ params }: { params: SlugType }) => {
@@ -60,7 +58,7 @@ const page = async ({ params }: { params: SlugType }) => {
       <section className="text-gray-400 bg-gray-900 body-font overflow-auto">
         <div className="container p-10 mx-auto overflow-auto">
           <form
-            action={createListAdd}
+            // action={createListAdd}
             className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full mt-10 mb-10"
           >
             <div className="flex flex-row justify-between">

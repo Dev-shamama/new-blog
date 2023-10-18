@@ -1,26 +1,26 @@
 import React from "react";
 
 const createPost = async (formData: FormData) => {
-  "use server";
+  // "use server";
 
-  const title = formData.get("title");
-  const description = formData.get("description");
-  const author = formData.get("author");
-  const slug = formData.get("slug");
-  const content = formData.get("content");
+  // const title = formData.get("title");
+  // const description = formData.get("description");
+  // const author = formData.get("author");
+  // const slug = formData.get("slug");
+  // const content = formData.get("content");
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogcreate`, {
-    method: "POST",
-    body: JSON.stringify({ description, author, content, title, slug }),
-    headers: { "content-type": "application/json" },
-    next: {
-      tags: ["blogPostAdd"],
-    },
-  });
-  const result = await res.json();
-  if (result) {
-    // revalidateTag("tutorialAdd");
-  }
+  // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogcreate`, {
+  //   method: "POST",
+  //   body: JSON.stringify({ description, author, content, title, slug }),
+  //   headers: { "content-type": "application/json" },
+  //   next: {
+  //     tags: ["blogPostAdd"],
+  //   },
+  // });
+  // const result = await res.json();
+  // if (result) {
+  //   // revalidateTag("tutorialAdd");
+  // }
 };
 
 const BlogCreate = () => {
@@ -30,7 +30,7 @@ const BlogCreate = () => {
         <section className="text-gray-400 bg-gray-900 body-font overflow-auto">
           <div className="container mx-auto overflow-auto">
             <form
-              action={createPost}
+              // action={createPost}
               className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full"
             >
               <div className="flex flex-row justify-between">

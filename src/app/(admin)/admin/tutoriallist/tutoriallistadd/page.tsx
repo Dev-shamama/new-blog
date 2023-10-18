@@ -1,18 +1,18 @@
 import React from "react";
 import { redirect } from "next/navigation";
-const createLanguage = async (formData: FormData) => {
-  "use server";
-  const language = formData.get("language");
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate`, {
-    method: "POST",
-    body: JSON.stringify({ language }),
-    headers: { "content-type": "application/json" },
-  });
-  const result = await res.json();
-  if (result.success == true) {
-    redirect("/admin/tutoriallist");
-  }
+const createLanguage = async (formData: FormData) => {
+  // const language = formData.get("language");
+
+  // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate`, {
+  //   method: "POST",
+  //   body: JSON.stringify({ language }),
+  //   headers: { "content-type": "application/json" },
+  // });
+  // const result = await res.json();
+  // if (result.success == true) {
+  //   redirect("/admin/tutoriallist");
+  // }
 };
 
 const TutorialList = () => {
@@ -25,7 +25,9 @@ const TutorialList = () => {
               Tutorial Add Language
             </h1>
           </div>
-          <form action={createLanguage}>
+          <form 
+          // action={createLanguage}
+          >
             <div className="relative mb-4">
               <label
                 htmlFor="language"

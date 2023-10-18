@@ -7,7 +7,6 @@ export interface SlugType {
 }
 
 const getContent = async (slug: any) => {
-  "use server";
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorialcontentget/${slug}`,
     {
@@ -25,23 +24,23 @@ const getContent = async (slug: any) => {
 };
 
 const createContent = async (formData: FormData) => {
-  "use server";
+  // "use server";
 
-  const content = formData.get("content");
-  const slugTitle = formData.get("slugTitle");
+  // const content = formData.get("content");
+  // const slugTitle = formData.get("slugTitle");
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorialcontentcreate`,
-    {
-      method: "POST",
-      body: JSON.stringify({ content, slugTitle }),
-      headers: { "content-type": "application/json" },
-    }
-  );
-  const result = await res.json();
-  if (result) {
-    revalidateTag("getContent");
-  }
+  // const res = await fetch(
+  //   `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorialcontentcreate`,
+  //   {
+  //     method: "POST",
+  //     body: JSON.stringify({ content, slugTitle }),
+  //     headers: { "content-type": "application/json" },
+  //   }
+  // );
+  // const result = await res.json();
+  // if (result) {
+  //   revalidateTag("getContent");
+  // }
 };
 
 const ContentData = async ({ params }: { params: any }) => {
@@ -51,7 +50,7 @@ const ContentData = async ({ params }: { params: any }) => {
       <section className="overflow-auto">
         <div className="container p-10 mx-auto overflow-auto">
           <form
-            action={createContent}
+            // action={createContent}
             className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full mt-10 mb-10"
           >
             <div className="flex flex-row justify-between">

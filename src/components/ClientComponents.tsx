@@ -368,10 +368,9 @@ const ButtonDeleteBlog = (props: any) => {
   const DeleteBlog = async (slug: any) => {
     if (confirm("Are You Sure?")) {
       const res = await fetch(
-        `http://localhost:3000/api/blogoperation/${slug}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogoperation/${slug}`,
         {
           method: "DELETE",
-          cache: "no-cache",
         }
       );
       const result = await res.json();
@@ -526,7 +525,7 @@ const ButtonLanguageUpdate = (props: any) => {
   const UpdateHeadingList = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const res = await fetch(
-      `http://localhost:3000/api/tutoriallistcreate/${props.langId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/${props.langId}`,
       {
         method: "PUT",
         body: JSON.stringify({
@@ -608,7 +607,7 @@ const ButtonLanguageDelete = (props: any) => {
   const DeleteLanguage = async (slug: any) => {
     if (confirm("Are You Sure?")) {
       const res = await fetch(
-        `http://localhost:3000/api/tutoriallistcreate/${slug}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/${slug}`,
         {
           method: "DELETE",
         }

@@ -7,7 +7,6 @@ export async function GET() {
   await connectDB();
 
   result = await TutorialHeadingList.find();
-  console.log(result)
   
   if (result === undefined) {
     result = null

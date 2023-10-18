@@ -4,7 +4,6 @@ export const NavbarIcon = () => {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
-      strokeWidth={1.5}
       stroke="currentColor"
       className="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full"
     >
@@ -23,7 +22,6 @@ export const ArrowRight = () => {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
-      strokeWidth={1.5}
       stroke="currentColor"
       className="w-4 h-4 ml-1"
     >
@@ -40,9 +38,6 @@ export const FaceBook = () => {
   return (
     <svg
       fill="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
       className="w-5 h-5"
       viewBox="0 0 24 24"
     >
@@ -55,9 +50,6 @@ export const Twitter = () => {
   return (
     <svg
       fill="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
       className="w-5 h-5"
       viewBox="0 0 24 24"
     >
@@ -71,9 +63,6 @@ export const Instagarm = () => {
     <svg
       fill="none"
       stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
       className="w-5 h-5"
       viewBox="0 0 24 24"
     >
@@ -87,9 +76,6 @@ export const Chat = () => {
   return (
     <svg
       fill="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
       className="w-5 h-5"
       viewBox="0 0 24 24"
     >
