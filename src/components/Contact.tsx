@@ -13,8 +13,9 @@ const contactPostHandler = async (formData: FormData) => {
   // });
   // const result = await res.json();
 };
+
 const getContact = async () => {
-  const res = await fetch('http://localhost:3000/api/contact/get');
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/contact/get`);
   const result = await res.json();
   return result;
 }
