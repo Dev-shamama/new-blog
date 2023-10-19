@@ -2,17 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/config/db";
 import TutorialHeadingList from "@/model/TutorialHeadingList";
 
-export async function GET(request: NextRequest, content:any) {
-    // const id = content.params.slug;
+export async function GET(request: NextRequest, content: any) {
+    let result = null
     const langSlug = content.params;
     await connectDB();
-    // console.log("===========================================================langSlug")
-    // console.log(langSlug)
 
-    const data = await TutorialHeadingList.find({language: langSlug.slug});
-    console.log(data);
+    result = await TutorialHeadingList.find({ language: langSlug.slug });
+
+    if (result === undefined) {
+        result = null
+    }
+
     return NextResponse.json({
         success: true,
-        data: data
+        data: result
     });
 }

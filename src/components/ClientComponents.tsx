@@ -1,8 +1,11 @@
 "use client";
 
+import { Chat, FaceBook, Instagram, Twitter } from "./Icon";
+
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
+import { toast } from "react-toastify";
 
 const ButtonHeadingUpdate = (props: any) => {
   const [show, setShow] = useState(true);
@@ -216,14 +219,14 @@ const ButtonDeleteHeadingList = (props: any) => {
         body: JSON.stringify({
           id: props.listId,
           headingId: props.headingId,
-          contentSlug: props.contentSlug
+          contentSlug: props.contentSlug,
         }),
         headers: { "content-type": "application/json" },
       }
     );
     const result = await res.json();
-    if(result.success === true) {
-      router.refresh()
+    if (result.success === true) {
+      router.refresh();
     }
   };
   return (
@@ -365,6 +368,7 @@ const ButtonUpdateHeadingList = (props: any) => {
 };
 
 const ButtonDeleteBlog = (props: any) => {
+  const router = useRouter();
   const DeleteBlog = async (slug: any) => {
     if (confirm("Are You Sure?")) {
       const res = await fetch(
@@ -374,6 +378,10 @@ const ButtonDeleteBlog = (props: any) => {
         }
       );
       const result = await res.json();
+      if (result) {
+        toast.success(result.message);
+        router.refresh();
+      }
     }
   };
 
@@ -388,6 +396,7 @@ const ButtonDeleteBlog = (props: any) => {
 };
 
 const BlogUpdateForm = (props: any) => {
+  const router = useRouter();
   const [title, setTitle] = useState(props.title);
   const [description, setDescription] = useState(props.description);
   const [author, setAuthor] = useState(props.author);
@@ -397,17 +406,18 @@ const BlogUpdateForm = (props: any) => {
 
   const updatePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogoperation/${id}`, {
-      method: "PUT",
-      body: JSON.stringify({ description, author, content, title, slug }),
-      headers: { "content-type": "application/json" },
-      // next: {
-      //   tags: ["blogPostAdd"],
-      // },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogoperation/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ description, author, content, title, slug }),
+        headers: { "content-type": "application/json" },
+      }
+    );
     const result = await res.json();
     if (result) {
-      // revalidateTag("tutorialAdd");
+      toast.success(result.message);
+      router.refresh();
     }
   };
 
@@ -629,6 +639,238 @@ const ButtonLanguageDelete = (props: any) => {
   );
 };
 
+const ContactForm = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  const contactPostHandler = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/contact/create`,
+      {
+        method: "POST",
+        body: JSON.stringify({ name, email, message }),
+        headers: { "content-type": "application/json" },
+      }
+    );
+    const result = await res.json();
+    if (result.success === true) {
+      toast.success(result.message);
+      setName("");
+      setEmail("");
+      setMessage("");
+    }
+  };
+
+  return (
+    <>
+      <form onSubmit={contactPostHandler} className="lg:w-1/2 md:w-2/3 mx-auto">
+        <div className="flex flex-wrap -m-2">
+          <div className="p-2 w-1/2">
+            <div className="relative">
+              <label htmlFor="name" className="leading-7 text-sm text-gray-400">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:bg-gray-900 focus:ring-2 focus:ring-indigo-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              />
+            </div>
+          </div>
+          <div className="p-2 w-1/2">
+            <div className="relative">
+              <label
+                htmlFor="email"
+                className="leading-7 text-sm text-gray-400"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:bg-gray-900 focus:ring-2 focus:ring-indigo-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              />
+            </div>
+          </div>
+          <div className="p-2 w-full">
+            <div className="relative">
+              <label
+                htmlFor="message"
+                className="leading-7 text-sm text-gray-400"
+              >
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:bg-gray-900 focus:ring-2 focus:ring-indigo-900 h-32 text-base outline-none text-gray-100 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+              ></textarea>
+            </div>
+          </div>
+          <div className="p-2 w-full">
+            <button className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+              Submit
+            </button>
+          </div>
+          <div className="p-2 w-full pt-8 mt-8 border-t border-gray-800 text-center">
+            <a className="text-indigo-400">rohishamama@gmail.com</a>
+            <br />
+            <br />
+            <span className="inline-flex">
+              <a className="text-gray-500">
+                <FaceBook />
+              </a>
+              <a className="ml-4 text-gray-500">
+                <Twitter />
+              </a>
+              <a className="ml-4 text-gray-500">
+                <Instagram />
+              </a>
+              <a className="ml-4 text-gray-500">
+                <Chat />
+              </a>
+            </span>
+          </div>
+        </div>
+      </form>
+    </>
+  );
+};
+
+const CreateBlogPost = () => {
+  const router = useRouter();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [author, setAuthor] = useState("");
+  const [slug, setSlug] = useState("");
+  const [content, setContent] = useState("");
+
+  const createPost = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogcreate`,
+      {
+        method: "POST",
+        body: JSON.stringify({ description, author, content, title, slug }),
+      }
+    );
+    const result = await res.json();
+    if (result.success === true) {
+      router.refresh();
+      toast.success(result.message);
+    }
+  };
+
+  return (
+    <>
+      <form
+        onSubmit={createPost}
+        className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full"
+      >
+        <div className="flex flex-row justify-between">
+          <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-white">
+            New Blog Post
+          </h1>
+        </div>
+
+        <div className="relative mb-4">
+          <label htmlFor="title" className="leading-7 text-sm text-gray-400">
+            Title
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+        </div>
+
+        <div className="relative mb-4">
+          <label
+            htmlFor="description"
+            className="leading-7 text-sm text-gray-400"
+          >
+            Description
+          </label>
+          <input
+            type="text"
+            id="description"
+            name="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+        </div>
+
+        <div className="relative mb-4">
+          <label htmlFor="author" className="leading-7 text-sm text-gray-400">
+            Author
+          </label>
+          <input
+            type="text"
+            id="author"
+            name="author"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+        </div>
+
+        <div className="relative mb-4">
+          <label htmlFor="slug" className="leading-7 text-sm text-gray-400">
+            Slug
+          </label>
+          <input
+            type="text"
+            id="slug"
+            name="slug"
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+            className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+        </div>
+
+        <div className="py-2 w-full">
+          <div className="relative">
+            <label
+              htmlFor="content"
+              className="leading-7 text-sm text-gray-400"
+            >
+              Content
+            </label>
+            <textarea
+              id="content"
+              name="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:bg-gray-900 focus:ring-2 focus:ring-indigo-900 h-32 text-base outline-none text-gray-100 py-1 px-3 resize-y leading-6 transition-colors duration-200 ease-in-out"
+            ></textarea>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+        >
+          Post
+        </button>
+      </form>
+    </>
+  );
+};
+
 export {
   ButtonHeadingUpdate,
   ButtonDelete,
@@ -640,4 +882,6 @@ export {
   ButtonDeleteBlog,
   BlogUpdateForm,
   ButtonLanguageDelete,
+  ContactForm,
+  CreateBlogPost,
 };

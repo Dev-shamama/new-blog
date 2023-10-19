@@ -6,20 +6,23 @@ import { ArrowRight } from "@/components/Icon";
 import readingTime from "reading-time";
 
 const getBlogData = async () =>{
-  // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogget`);
-  // const result = await res.json();
-  // return result
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogget`, {
+    method: "GET",
+    cache: "no-cache"
+  });
+  const result = await res.json();
+  return result
 }
 
 const Fblog = async () => {
-  // const result = await getBlogData();
+  const result = await getBlogData();
   return (
     <>
       <Header />
       <section className="text-gray-400 bg-gray-900 body-font">
         <div className="container px-40 md:px-10 py-24 mx-auto">
           <div className="-my-8 divide-y-2 divide-gray-800">
-            {/* <div className="py-8 flex flex-col flex-wrap md:flex-nowrap">
+            <div className="py-8 flex flex-col flex-wrap md:flex-nowrap">
               {result && result?.data?.length === 0 ? (
                 <div
                   className="md:flex-grow  mb-6 bg-slate-700 p-6"
@@ -60,7 +63,7 @@ const Fblog = async () => {
                   </div>
                 ))
               )}
-            </div> */}
+            </div>
           </div>
         </div>
       </section>

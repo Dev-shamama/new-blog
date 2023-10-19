@@ -8,7 +8,6 @@ export const NavbarIcon = () => {
       className="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full"
     >
       <path
-        strokeLinecap="round"
         strokeLinejoin="round"
         d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
       />
@@ -26,7 +25,6 @@ export const ArrowRight = () => {
       className="w-4 h-4 ml-1"
     >
       <path
-        strokeLinecap="round"
         strokeLinejoin="round"
         d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
       />

@@ -8,11 +8,9 @@ export async function DELETE(request: NextRequest, { params }: { params: any }) 
 
     const result = await Blog.findByIdAndDelete(id);
 
-    console.log(result);
-
     return NextResponse.json({
         success: true,
-        message: "Tutorial Heading Update Successfully",
+        message: "Blog Delete Successfully",
         data: result
     });
 }
@@ -25,11 +23,9 @@ export async function PUT(request: NextRequest, { params }: { params: any }) {
 
     const result = await Blog.findByIdAndUpdate(id, req, { new: true });
 
-    console.log(result);
-
     return NextResponse.json({
         success: true,
-        message: "Tutorial Heading Update Successfully",
+        message: "Blog Update Successfully",
         data: result
     });
 }

@@ -6,7 +6,6 @@ import {
   ButtonHeadingUpdate,
   ButtonUpdateHeadingList,
 } from "@/components/ClientComponents";
-import { revalidateTag } from "next/cache";
 import React from "react";
 
 export interface SlugType {
@@ -15,14 +14,7 @@ export interface SlugType {
 
 const getTutorialHeading = async (params: any) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistget/${params.slug}`,
-    {
-      method: "GET",
-      cache: "no-cache",
-      next: {
-        tags: ["change"],
-      },
-    }
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistget/${params.slug}`
   );
   const result = await res.json();
   return result;
@@ -30,12 +22,10 @@ const getTutorialHeading = async (params: any) => {
 
 const createListAdd = async (formData: FormData) => {
   // "use server";
-
   // const heading = formData.get("heading");
   // const title = formData.get("title");
   // const slug = formData.get("slug");
   // const langSlug = formData.get("id");
-
   // const res = await fetch(
   //   `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistcreateHeading/${langSlug}`,
   //   {
@@ -52,7 +42,7 @@ const createListAdd = async (formData: FormData) => {
 
 const page = async ({ params }: { params: SlugType }) => {
   const data = await getTutorialHeading(params);
-
+  console.log(data);
   return (
     <>
       <section className="text-gray-400 bg-gray-900 body-font overflow-auto">
@@ -120,13 +110,13 @@ const page = async ({ params }: { params: SlugType }) => {
 
           <div className="flex flex-row justify-between w-full mb-5">
             <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-white">
-              Language Tutorial List Detail
+              Language Tutorial List Detail {data.data[0].language}
             </h1>
           </div>
 
           <div className="w-full mx-auto overflow-auto">
             {data &&
-              data.data &&
+              data?.data &&
               data?.data[0]?.list.map((item: any, index: number) => {
                 return (
                   <>
@@ -135,7 +125,6 @@ const page = async ({ params }: { params: SlugType }) => {
                         heading={item?.heading}
                         headingId={item?._id}
                         id={params?.slug}
-                        functionUpdate={getTutorialHeading}
                       />
                       <ButtonDelete headingId={item?._id} id={params.slug} />
                       <ButtonAdd headingId={item?._id} id={params.slug} />
