@@ -6,13 +6,13 @@ import Link from "next/link";
 import React from "react";
 
 const getTutorialList = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistget`);
-  const result = await res.json();
-  return result;
+  // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistget`);
+  // const result = await res.json();
+  // return result;
 };
 
 const TutorialList = async () => {
-  const result =  await getTutorialList()
+  // const result =  await getTutorialList()
   
   return (
     <section className="text-gray-400 bg-gray-900 body-font overflow-auto">
@@ -46,7 +46,7 @@ const TutorialList = async () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="m-3">
+            {/* <tbody className="m-3">
               {result?.data && result?.data?.length === 0 ? (
                 <div className="md:flex-grow  mb-6 bg-slate-700 p-6">
                   <h1>Not Found</h1>
@@ -77,7 +77,7 @@ const TutorialList = async () => {
                   );
                 })
               )}
-            </tbody>
+            </tbody> */}
           </table>
         </div>
       </div>

@@ -4,14 +4,14 @@ import Link from "next/link";
 import React from "react";
 
 const getBlog = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogget`);
-  const result = await res.json();
-  return result;
+  // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogget`);
+  // const result = await res.json();
+  // return result;
 };
 
 
 const Blog = async () => {
-  const data = await getBlog();
+  // const data = await getBlog();
   return (
     <>
       <section className="text-gray-400 bg-gray-900 body-font overflow-hidden px-24">
@@ -26,7 +26,7 @@ const Blog = async () => {
           </div>
 
           <div className="-my-8 divide-y-2 divide-gray-800">
-            <div className="py-8 flex flex-col flex-wrap md:flex-nowrap">
+            {/* <div className="py-8 flex flex-col flex-wrap md:flex-nowrap">
               {data?.data && data?.data.map((item: any) => (
                 <div className="md:flex-grow  mb-6 bg-slate-700 p-6" key={item._id}>
                   <h2 className="text-2xl font-medium text-white title-font mb-2">
@@ -56,7 +56,7 @@ const Blog = async () => {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
