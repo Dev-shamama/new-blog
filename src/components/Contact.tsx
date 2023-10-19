@@ -1,5 +1,5 @@
 import React from "react";
-import { Chat, FaceBook, Instagram, Twitter } from "./Icon";
+// import { Chat, FaceBook, Instagram, Twitter } from "./Icon";
 
 const contactPostHandler = async (formData: FormData) => {
   // "use server";
@@ -15,10 +15,12 @@ const contactPostHandler = async (formData: FormData) => {
 };
 
 const getContact = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/contact/get`);
+  const res = await fetch(
+    `http://localhost:3000/api/contact/get`
+  );
   const result = await res.json();
   return result;
-}
+};
 
 const Contact = async () => {
   const result = await getContact();
@@ -27,11 +29,10 @@ const Contact = async () => {
   return (
     <section className="text-gray-400 bg-gray-900 body-font relative">
       <h1>Contact Page</h1>
-      {
-        result.data.map((item:any) => (
+      {result &&
+        result.data.map((item: any) => (
           <li key={item._id}>{item.color_name}</li>
-        ) )
-      }
+        ))}
       {/* <div className="container px-5 py-24 mx-auto">
         <div className="flex flex-col text-center w-full mb-12">
           <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-white">
