@@ -1,5 +1,5 @@
 import React from "react";
-import { Chat, FaceBook, Instagarm, NavbarIcon, Twitter } from "./Icon";
+import { Chat, FaceBook, Instagram, NavbarIcon, Twitter } from "./Icon";
 
 const Footer = () => {
   return (
@@ -29,7 +29,7 @@ const Footer = () => {
             <Twitter />
           </a>
           <a className="ml-4 text-gray-500">
-            <Instagarm />
+            <Instagram />
           </a>
           <a className="ml-4 text-gray-500">
             <Chat />

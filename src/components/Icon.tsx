@@ -58,7 +58,7 @@ export const Twitter = () => {
   );
 };
 
-export const Instagarm = () => {
+export const Instagram = () => {
   return (
     <svg
       fill="none"

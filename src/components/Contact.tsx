@@ -1,5 +1,5 @@
 import React from "react";
-import { Chat, FaceBook, Instagarm, Twitter } from "./Icon";
+import { Chat, FaceBook, Instagram, Twitter } from "./Icon";
 
 const contactPostHandler = async (formData: FormData) => {
   // "use server";
@@ -13,11 +13,20 @@ const contactPostHandler = async (formData: FormData) => {
   // });
   // const result = await res.json();
 };
+const getContact = async () => {
+  const res = await fetch('http://localhost:3000/api/contact/get');
+  const result = await res.json();
+  return result;
+}
 
-const Contact = () => {
+const Contact = async () => {
+  const result = await getContact();
+  console.log(result);
+  
   return (
     <section className="text-gray-400 bg-gray-900 body-font relative">
-      <div className="container px-5 py-24 mx-auto">
+      <h1>Contact Page</h1>
+      {/* <div className="container px-5 py-24 mx-auto">
         <div className="flex flex-col text-center w-full mb-12">
           <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-white">
             Contact Us
@@ -94,7 +103,7 @@ const Contact = () => {
                   <Twitter />
                 </a>
                 <a className="ml-4 text-gray-500">
-                  <Instagarm />
+                  <Instagram />
                 </a>
                 <a className="ml-4 text-gray-500">
                   <Chat />
@@ -103,7 +112,7 @@ const Contact = () => {
             </div>
           </div>
         </form>
-      </div>
+      </div> */}
     </section>
   );
 };
