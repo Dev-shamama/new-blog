@@ -22,10 +22,15 @@ const getContact = async () => {
 const Contact = async () => {
   const result = await getContact();
   console.log(result);
-  
+
   return (
     <section className="text-gray-400 bg-gray-900 body-font relative">
       <h1>Contact Page</h1>
+      {
+        result.data.map((item:any) => (
+          <li key={item._id}>{item.color_name}</li>
+        ) )
+      }
       {/* <div className="container px-5 py-24 mx-auto">
         <div className="flex flex-col text-center w-full mb-12">
           <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-white">
