@@ -16,7 +16,7 @@ const contactPostHandler = async (formData: FormData) => {
 
 const getContact = async () => {
   const res = await fetch(
-    `http://localhost:3000/api/contact/get`
+    `http://new-blog-olive.vercel.app/api/contact/get`
   );
   const result = await res.json();
   return result;

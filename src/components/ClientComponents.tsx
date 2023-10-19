@@ -14,7 +14,7 @@ const ButtonHeadingUpdate = (props: any) => {
 
   const updateHeading = async () => {
     const res = await fetch(
-      `http://localhost:3000/api/tutoriallistcreate/tutoriallistupdateHeading/${props.id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistupdateHeading/${props.id}`,
       {
         method: "POST",
         body: JSON.stringify({ id: props.headingId, heading }),
@@ -67,7 +67,7 @@ const ButtonDelete = (props: any) => {
   const router = useRouter();
   const DeleteHeading = async () => {
     const res = await fetch(
-      `http://localhost:3000/api/tutoriallistcreate/tutoriallistupdateHeading/${props.id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistupdateHeading/${props.id}`,
       {
         method: "DELETE",
         body: JSON.stringify({
@@ -110,7 +110,7 @@ const ButtonAdd = (props: any) => {
   const AddHeadingList = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const res = await fetch(
-      `http://localhost:3000/api/tutoriallistcreate/tutoriallistaddconcept/${props.id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistaddconcept/${props.id}`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -210,7 +210,7 @@ const ButtonDeleteHeadingList = (props: any) => {
   const router = useRouter();
   const DeleteHeadingList = async () => {
     const res = await fetch(
-      `http://localhost:3000/api/tutoriallistcreate/tutoriallistaddconcept/${props.slugId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistaddconcept/${props.slugId}`,
       {
         method: "DELETE",
         body: JSON.stringify({
@@ -266,7 +266,7 @@ const ButtonUpdateHeadingList = (props: any) => {
   const UpdateHeadingList = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const res = await fetch(
-      `http://localhost:3000/api/tutoriallistcreate/tutoriallistupdate/${props.slugId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistupdate/${props.slugId}`,
       {
         method: "PUT",
         body: JSON.stringify({
@@ -397,7 +397,7 @@ const BlogUpdateForm = (props: any) => {
 
   const updatePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await fetch(`http://localhost:3000/api/blogoperation/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogoperation/${id}`, {
       method: "PUT",
       body: JSON.stringify({ description, author, content, title, slug }),
       headers: { "content-type": "application/json" },
