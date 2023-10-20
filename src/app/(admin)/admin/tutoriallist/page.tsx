@@ -92,4 +92,4 @@ const TutorialList = async () => {
   );
 };
 
-export default TutorialList;
+export default TutorialList

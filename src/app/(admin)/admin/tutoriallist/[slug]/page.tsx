@@ -28,29 +28,8 @@ const getTutorialHeading = async (params: any) => {
   return result;
 };
 
-// const createListAdd = async (formData: FormData) => {
-//   "use server";
-//   const heading = formData.get("heading");
-//   const title = formData.get("title");
-//   const slug = formData.get("slug");
-//   const langSlug = formData.get("id");
-//   const res = await fetch(
-//     `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistcreateHeading/${langSlug}`,
-//     {
-//       method: "POST",
-//       body: JSON.stringify({ heading, title, slug }),
-//       headers: { "content-type": "application/json" },
-//     }
-//   );
-//   const result = await res.json();
-//   if (result.success === true) {
-//     revalidateTag("change");
-//   }
-// };
-
 const page = async ({ params }: { params: SlugType }) => {
   const data = await getTutorialHeading(params);
-  console.log(data);
   return (
     <>
       <section className="text-gray-400 bg-gray-900 body-font overflow-auto">
@@ -127,7 +106,7 @@ const page = async ({ params }: { params: SlugType }) => {
               data?.data &&
               data?.data[0]?.list.map((item: any, index: number) => {
                 return (
-                  <>
+                  <div  key={index}>
                     <div className="flex flex-row items-center gap-2">
                       <ButtonHeadingUpdate
                         heading={item?.heading}
@@ -185,7 +164,7 @@ const page = async ({ params }: { params: SlugType }) => {
                         })}
                       </tbody>
                     </table>
-                  </>
+                  </div>
                 );
               })}
           </div>
