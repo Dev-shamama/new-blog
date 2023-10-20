@@ -1,11 +1,13 @@
 "use client";
 
+import { revalidateTag } from "next/cache";
 import { Chat, FaceBook, Instagram, Twitter } from "./Icon";
 
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useState, useTransition } from "react";
 import { toast } from "react-toastify";
+import { AddHeadingList } from "@/actions/serverAction";
 
 const ButtonHeadingUpdate = (props: any) => {
   const [show, setShow] = useState(true);
@@ -96,7 +98,8 @@ const ButtonDelete = (props: any) => {
 };
 
 const ButtonAdd = (props: any) => {
-  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const [title, setTitle] = useState("");
@@ -110,26 +113,20 @@ const ButtonAdd = (props: any) => {
     setIsOpen(true);
   };
 
-  const AddHeadingList = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistaddconcept/${props.id}`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          id: props.headingId,
-          title,
-          slug,
-        }),
-        headers: { "content-type": "application/json" },
+  const someNew = () => {
+    startTransition(async () => {
+      const result = await AddHeadingList(formData);
+      if (result?.success === true) {
+        setIsOpen(false);
       }
-    );
-    const result = await res.json();
-    if (result) {
-      router.refresh();
-      setIsOpen(false);
-    }
+    });
   };
+
+  const formData = new FormData();
+  formData.append("id", props.id);
+  formData.append("headingId", props.headingId);
+  formData.append("title", title);
+  formData.append("slug", slug);
 
   return (
     <>
@@ -147,12 +144,7 @@ const ButtonAdd = (props: any) => {
               <h2 className="text-2xl font-bold mb-4">
                 Language Tutorial List Add
               </h2>
-              <form
-                onSubmit={AddHeadingList}
-                className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full mt-10 mb-10"
-              >
-                <input type="hidden" value={props.headingId} name="id" />
-
+              <form className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full mt-10 mb-10">
                 <div className="relative mb-4">
                   <label
                     htmlFor="title"
@@ -188,7 +180,8 @@ const ButtonAdd = (props: any) => {
                 </div>
 
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={someNew}
                   className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
                 >
                   Add
@@ -756,7 +749,7 @@ const CreateBlogPost = () => {
   const [content, setContent] = useState("");
 
   const createPost = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogcreate`,
       {

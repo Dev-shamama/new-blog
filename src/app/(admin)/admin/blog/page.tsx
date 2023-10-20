@@ -1,16 +1,8 @@
+import { getBlog } from "@/actions/serverAction";
 import { ButtonDeleteBlog } from "@/components/ClientComponents";
 import { ArrowRight } from "@/components/Icon";
 import Link from "next/link";
 import React from "react";
-
-const getBlog = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogget`,{
-    method: "GET",
-    cache: "no-store"
-  });
-  const result = await res.json();
-  return result;
-};
 
 const Blog = async () => {
   const data = await getBlog();

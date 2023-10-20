@@ -6,7 +6,14 @@ import Link from "next/link";
 import React from "react";
 
 const getTutorialList = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistget`);
+  "use server"
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistget`, {
+    method: "GET",
+    cache: "no-cache",
+    next: {
+      tags: ['tutorial']
+    }
+  });
   const result = await res.json();
   return result;
 };

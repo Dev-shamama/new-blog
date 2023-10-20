@@ -5,9 +5,8 @@ import TutorialHeadingList from "@/model/TutorialHeadingList";
 export async function GET() {
   let result = null
   await connectDB();
-
   result = await TutorialHeadingList.find();
-  
+
   if (result === undefined) {
     result = null
   }
