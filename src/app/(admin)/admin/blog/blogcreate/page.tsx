@@ -1,4 +1,3 @@
-import { createPostAction } from "@/actions/serverAction";
 import React from "react";
 
 
@@ -10,7 +9,7 @@ const BlogCreate = () => {
         <section className="text-gray-400 bg-gray-900 body-font overflow-auto">
           <div className="container mx-auto overflow-auto">
             <form
-              action={createPostAction}
+              // onSubmit={createPostAction}
               className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full"
             >
               <div className="flex flex-row justify-between">

@@ -2,8 +2,8 @@ import { BlogUpdateForm } from "@/components/ClientComponents";
 import React from "react";
 
 const getBlog = async (slug: string) => {
-
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogget/${slug}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogsingle?slug=${slug}`, {
+    cache: "no-cache",
     method: "GET",
   });
   const result = await res.json();

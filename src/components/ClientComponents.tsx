@@ -2,12 +2,12 @@
 
 import { revalidateTag } from "next/cache";
 import { Chat, FaceBook, Instagram, Twitter } from "./Icon";
-
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import React, { FormEvent, useState, useTransition } from "react";
 import { toast } from "react-toastify";
-import { AddHeadingList } from "@/actions/serverAction";
+
+// import { AddHeadingList } from "@/actions/serverAction";
 
 const ButtonHeadingUpdate = (props: any) => {
   const [show, setShow] = useState(true);
@@ -113,14 +113,14 @@ const ButtonAdd = (props: any) => {
     setIsOpen(true);
   };
 
-  const someNew = () => {
-    startTransition(async () => {
-      const result = await AddHeadingList(formData);
-      if (result?.success === true) {
-        setIsOpen(false);
-      }
-    });
-  };
+  // const someNew = () => {
+  //   startTransition(async () => {
+  //     const result = await AddHeadingList(formData);
+  //     if (result?.success === true) {
+  //       setIsOpen(false);
+  //     }
+  //   });
+  // };
 
   const formData = new FormData();
   formData.append("id", props.id);
@@ -181,7 +181,7 @@ const ButtonAdd = (props: any) => {
 
                 <button
                   type="button"
-                  onClick={someNew}
+                  // onClick={someNew}
                   className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
                 >
                   Add
@@ -360,17 +360,18 @@ const ButtonUpdateHeadingList = (props: any) => {
   );
 };
 
-const ButtonDeleteBlog = (props: any) => {
+const ButtonDeleteBlog = ({ id }: { id: string }) => {
   const router = useRouter();
-  const DeleteBlog = async (slug: any) => {
+  const DeleteBlog = async () => {
     if (confirm("Are You Sure?")) {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogoperation/${slug}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogdelete?id=${id}`,
         {
-          method: "DELETE",
+          method: "GET",
         }
       );
       const result = await res.json();
+      console.log(result);
       if (result) {
         toast.success(result.message);
         router.refresh();
@@ -381,7 +382,7 @@ const ButtonDeleteBlog = (props: any) => {
   return (
     <button
       className="bg-red-500 hover:bg-red-600 text-white  py-1 px-2 rounded-sm cursor-pointer"
-      onClick={() => DeleteBlog(props.id)}
+      onClick={() => DeleteBlog()}
     >
       Delete
     </button>
@@ -400,7 +401,7 @@ const BlogUpdateForm = (props: any) => {
   const updatePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogoperation/${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogupdate?id=${id}`,
       {
         method: "PUT",
         body: JSON.stringify({ description, author, content, title, slug }),
@@ -411,6 +412,7 @@ const BlogUpdateForm = (props: any) => {
     if (result) {
       toast.success(result.message);
       router.refresh();
+      router.push('/admin/blog');
     }
   };
 
@@ -711,7 +713,10 @@ const ContactForm = () => {
             </div>
           </div>
           <div className="p-2 w-full">
-            <button className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" type="submit">
+            <button
+              className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+              type="submit"
+            >
               Submit
             </button>
           </div>
@@ -751,7 +756,7 @@ const CreateBlogPost = () => {
   const createPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blogcreate`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/sblogcreate`,
       {
         method: "POST",
         body: JSON.stringify({ description, author, content, title, slug }),
