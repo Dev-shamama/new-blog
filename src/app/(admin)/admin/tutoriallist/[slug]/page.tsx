@@ -1,4 +1,4 @@
-import { createListAdd } from "@/actions/serverAction";
+// import { createListAdd } from "@/actions/serverAction";
 import {
   ButtonAdd,
   ButtonAddContent,
@@ -35,7 +35,7 @@ const page = async ({ params }: { params: SlugType }) => {
       <section className="text-gray-400 bg-gray-900 body-font overflow-auto">
         <div className="container p-10 mx-auto overflow-auto">
           <form
-            action={createListAdd}
+            // action={createListAdd}
             className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full mt-10 mb-10"
           >
             <div className="flex flex-row justify-between">
