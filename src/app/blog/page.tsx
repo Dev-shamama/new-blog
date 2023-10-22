@@ -42,7 +42,7 @@ const Fblog = async () => {
                 data &&
                 data.map((item: any) => (
                   <div
-                    className="md:flex-grow  mb-6 bg-slate-700 p-6"
+                    className="md:flex-grow  mb-6 bg-slate-700 p-6 rounded-lg"
                     key={item._id}
                   >
                     <h2 className="text-2xl font-medium text-white title-font mb-2">

@@ -18,11 +18,16 @@ const ButtonHeadingUpdate = (props: any) => {
   const [show, setShow] = useState(true);
   const [heading, setHeading] = useState(props.heading);
 
+  const [buttonState, setButtonState] = useState("Update");
+  const [isDisable, setIsDisable] = useState(false);
+
   const buttonShow = () => {
     setShow(false);
   };
 
   const updateHeading = async () => {
+    setButtonState("Loading...");
+    setIsDisable(true);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingupdate?slug=${props.id}`,
       {
@@ -32,6 +37,8 @@ const ButtonHeadingUpdate = (props: any) => {
       }
     );
     const result = await res.json();
+    setButtonState("Update");
+    setIsDisable(false);
     if (result.success === true) {
       setShow(true);
     }
@@ -62,12 +69,15 @@ const ButtonHeadingUpdate = (props: any) => {
           Edit
         </span>
       ) : (
-        <span
-          className="bg-indigo-400 text-white font-bold py-2 px-4 rounded-full cursor-pointer"
+        <button
+        
+
+          className="bg-indigo-400 text-white font-semibold py-2 px-4 rounded-full cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white"
           onClick={updateHeading}
+          disabled={isDisable}
         >
-          Update
-        </span>
+          {buttonState}
+        </button>
       )}
     </>
   );
@@ -113,6 +123,9 @@ const ButtonAdd = (props: any) => {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
 
+  const [buttonState, setButtonState] = useState("Add");
+  const [isDisable, setIsDisable] = useState(false);
+
   const closeModal = () => {
     setIsOpen(false);
   };
@@ -135,6 +148,8 @@ const ButtonAdd = (props: any) => {
     if (error !== undefined) {
       toast.error(error.message);
     } else {
+      setButtonState("Loading...");
+      setIsDisable(true);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingchildrencreate?slug=${props.id}`,
         {
@@ -148,7 +163,12 @@ const ButtonAdd = (props: any) => {
         }
       );
       const result = await res.json();
-      if (result.success === true) {
+      setButtonState("Add");
+      setIsDisable(false);
+      if (result.success === false) {
+        toast.error(result.message);
+      } else if (result.success === true) {
+        toast.success(result.message);
         router.refresh();
         setIsOpen(false);
       }
@@ -211,9 +231,10 @@ const ButtonAdd = (props: any) => {
 
                 <button
                   type="submit"
-                  className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+                  disabled={isDisable}
+                  className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
                 >
-                  Add
+                  {buttonState}
                 </button>
               </form>
 
@@ -282,6 +303,10 @@ const ButtonUpdateHeadingList = (props: any) => {
   const [title, setTitle] = useState(props.title);
   const [slug, setSlug] = useState(props.slug);
 
+  const [buttonState, setButtonState] = useState("Update");
+  const [isDisable, setIsDisable] = useState(false);
+
+
   const closeModal = () => {
     setIsOpen(false);
   };
@@ -292,6 +317,8 @@ const ButtonUpdateHeadingList = (props: any) => {
 
   const UpdateHeadingList = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setButtonState("Loading...");
+    setIsDisable(true);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingchildrenupdate?slug=${props.slugId}`,
 
@@ -308,6 +335,8 @@ const ButtonUpdateHeadingList = (props: any) => {
       }
     );
     const result = await res.json();
+    setButtonState("Update");
+    setIsDisable(false);
     if (result) {
       router.refresh();
       setIsOpen(false);
@@ -371,11 +400,12 @@ const ButtonUpdateHeadingList = (props: any) => {
                 </div>
 
                 <button
-                  type="submit"
-                  className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
-                >
-                  Update
-                </button>
+        type="submit"
+        disabled={isDisable}
+        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
+      >
+        {buttonState}
+      </button>
               </form>
 
               <button
@@ -429,8 +459,13 @@ const BlogUpdateForm = (props: any) => {
   const [content, setContent] = useState(props.content);
   const [id, setId] = useState(props._id);
 
+  const [buttonState, setButtonState] = useState("Update Post");
+  const [isDisable, setIsDisable] = useState(false);
+
   const updatePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setButtonState("Loading...");
+    setIsDisable(true);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogupdate?id=${id}`,
       {
@@ -440,6 +475,8 @@ const BlogUpdateForm = (props: any) => {
       }
     );
     const result = await res.json();
+    setButtonState("Update Post");
+    setIsDisable(false);
     if (result) {
       toast.success(result.message);
       router.refresh();
@@ -536,9 +573,10 @@ const BlogUpdateForm = (props: any) => {
 
       <button
         type="submit"
-        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+        disabled={isDisable}
+        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
       >
-        Update Post
+        {buttonState}
       </button>
     </form>
   );
@@ -547,6 +585,8 @@ const BlogUpdateForm = (props: any) => {
 const ButtonLanguageUpdate = (props: any) => {
   const router = useRouter();
   const [language, setLanguage] = useState(props.language);
+  const [buttonState, setButtonState] = useState("Update");
+  const [isDisable, setIsDisable] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -567,6 +607,8 @@ const ButtonLanguageUpdate = (props: any) => {
     if (error !== undefined) {
       toast.error(error.message);
     } else {
+      setButtonState("Loading...");
+      setIsDisable(true);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languageupdate?id=${props.langId}`,
         {
@@ -578,6 +620,8 @@ const ButtonLanguageUpdate = (props: any) => {
         }
       );
       const result = await res.json();
+      setButtonState("Update");
+      setIsDisable(false);
       if (result.success == true) {
         router.refresh();
         setIsOpen(false);
@@ -626,9 +670,10 @@ const ButtonLanguageUpdate = (props: any) => {
 
                 <button
                   type="submit"
-                  className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+                  disabled={isDisable}
+                  className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
                 >
-                  Update
+                  {buttonState}
                 </button>
               </form>
 
@@ -803,37 +848,52 @@ const CreateBlogPost = () => {
   const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
 
+  const [buttonState, setButtonState] = useState("Post");
+  const [isDisable, setIsDisable] = useState(false);
+
   const createPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { error, value }: { error: any, value: any } = BlogValidateSchema.validate({
-      title,
-      description,
-      author,
-      slug,
-      content,
-    });
+    const { error, value }: { error: any; value: any } =
+      BlogValidateSchema.validate({
+        title,
+        description,
+        author,
+        slug,
+        content,
+      });
 
     const slugModify = value.slug.split(" ").join("-");
     const authorModify = value.author.split(" ").join("");
-    console.log(authorModify)
 
     if (error !== undefined) {
       toast.error(error.message);
     } else {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogcreate`,
-      {
-        method: "POST",
-        body: JSON.stringify({ description, author: authorModify, content, title, slug: slugModify }),
+      setButtonState("Loading...");
+      setIsDisable(true);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogcreate`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            description,
+            author: authorModify,
+            content,
+            title,
+            slug: slugModify,
+          }),
+        }
+      );
+      const result = await res.json();
+      setButtonState("Post");
+      setIsDisable(false);
+      if (result.success === false) {
+        toast.error(result.message);
+      } else if (result.success === true) {
+        router.refresh();
+        toast.success(result.message);
       }
-    );
-    const result = await res.json();
-    if (result.success === true) {
-      router.refresh();
-      toast.success(result.message);
     }
-  }
   };
 
   return (
@@ -927,9 +987,10 @@ const CreateBlogPost = () => {
 
         <button
           type="submit"
-          className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+          disabled={isDisable}
+          className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
         >
-          Post
+          {buttonState}
         </button>
       </form>
     </>
@@ -939,6 +1000,10 @@ const CreateBlogPost = () => {
 const TutorialLanguage = () => {
   const router = useRouter();
   const [language, setLanguage] = useState("");
+
+  const [buttonState, setButtonState] = useState("Add");
+  const [isDisable, setIsDisable] = useState(false);
+
   const createLanguage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -949,6 +1014,9 @@ const TutorialLanguage = () => {
     if (error !== undefined) {
       toast.error(error.message);
     } else {
+      setButtonState("Loading...");
+      setIsDisable(true);
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languagecreate`,
         {
@@ -958,6 +1026,8 @@ const TutorialLanguage = () => {
         }
       );
       const result = await res.json();
+      setButtonState("Add");
+      setIsDisable(false);
       if (result.success === true) {
         router.refresh();
         router.push("/admin/tutoriallist");
@@ -981,9 +1051,10 @@ const TutorialLanguage = () => {
       </div>
       <button
         type="submit"
-        className="ml-auto text-white bg-indigo-500 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded"
+        disabled={isDisable}
+        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
       >
-        Add
+        {buttonState}
       </button>
     </form>
   );
@@ -994,6 +1065,9 @@ const LanguageListHeadingCreate = ({ paramSlug }: { paramSlug: string }) => {
   const [heading, setHeading] = useState("");
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
+
+  const [buttonState, setButtonState] = useState("Add");
+  const [isDisable, setIsDisable] = useState(false);
 
   const createListAdd = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -1010,6 +1084,8 @@ const LanguageListHeadingCreate = ({ paramSlug }: { paramSlug: string }) => {
     if (error !== undefined) {
       toast.error(error.message);
     } else {
+      setButtonState("Loading...");
+      setIsDisable(true);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingcreate?slug=${paramSlug}`,
         {
@@ -1019,6 +1095,8 @@ const LanguageListHeadingCreate = ({ paramSlug }: { paramSlug: string }) => {
         }
       );
       const result = await res.json();
+      setButtonState("Add");
+      setIsDisable(false);
       if (result.success === true) {
         router.refresh();
       }
@@ -1080,9 +1158,10 @@ const LanguageListHeadingCreate = ({ paramSlug }: { paramSlug: string }) => {
 
       <button
         type="submit"
-        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+        disabled={isDisable}
+        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
       >
-        Add
+        {buttonState}
       </button>
     </form>
   );
@@ -1097,9 +1176,13 @@ const ContentCreate = ({
 }) => {
   const router = useRouter();
   const [content, setContent] = useState(itemContent);
+  const [buttonState, setButtonState] = useState("Add / Update");
+  const [isDisable, setIsDisable] = useState(false);
 
   const createContent = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setButtonState("Loading...");
+    setIsDisable(true);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/tutorialcontent/contentcreate`,
       {
@@ -1109,6 +1192,8 @@ const ContentCreate = ({
       }
     );
     const result = await res.json();
+    setButtonState("Add / Update");
+    setIsDisable(false);
     if (result) {
       router.refresh();
     }
@@ -1142,13 +1227,15 @@ const ContentCreate = ({
         </div>
       </div>
 
-      <button
+       <button
         type="submit"
-        className={`border-0 py-2 px-8 focus:outline-none  rounded text-lg text-white bg-indigo-600`}
+        disabled={isDisable}
+        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
       >
-        Add / Update
+        {buttonState}
       </button>
     </form>
+
   );
 };
 

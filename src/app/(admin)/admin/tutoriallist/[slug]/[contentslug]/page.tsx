@@ -30,8 +30,8 @@ const ContentData = async ({ params }: { params: any }) => {
   const contentData: any = await getContent(params?.contentslug);
   return (
     <>
-      <section className="overflow-auto">
-        <div className="container p-10 mx-auto overflow-auto">
+      <section className="overflow-auto bg-gray-800">
+        <div className="container p-10 mx-auto overflow-auto ">
           <ContentCreate
             itemContent={
               contentData?.data[0]?.content ? contentData?.data[0]?.content : ""

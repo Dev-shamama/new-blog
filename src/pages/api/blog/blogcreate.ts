@@ -10,9 +10,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const receiveData = JSON.parse(req.body);
-        console.log(receiveData);
 
         await connectDB()
+
+        const slugExist = await Blog.find({ slug: receiveData.slug })
+        if (slugExist.length > 0) {
+            return res.status(401).json({ success: false, message: "slug is already exist" });
+        }
+
 
         const data = new Blog({
             title: receiveData.title,
@@ -24,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const result = await data.save();
 
 
-        return res.status(201).json({ success: true, message: "Blog Created Successfully", data: result});
+        return res.status(201).json({ success: true, message: "Blog Created Successfully", data: result });
     } catch (error: any) {
         return res.status(500).json({ success: false, message: error.message });
     }

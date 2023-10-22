@@ -38,7 +38,7 @@ const TutorialList = async () => {
           </h1>
           <Link
             href="/admin/tutoriallist/tutoriallistadd"
-            className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded"
+            className="flex ml-auto text-white bg-indigo-500 font-semibold border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded"
           >
             Add Language
           </Link>

@@ -7,7 +7,7 @@ import readingTime from "reading-time";
 const getBlog = async (slug: string) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogget?slug=${slug}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogsingle?slug=${slug}`,
         {
           method: "GET",
           cache: "no-cache",
@@ -34,7 +34,7 @@ const FBlogSingle = async ({ params }: { params: any }) => {
       <Header />
       <section className="text-gray-400 bg-gray-900 body-font">
         <div className="container px-40 md:px-10 py-24 mx-auto">
-          <div className="bg-gray-800 p-10">
+          <div className="bg-gray-800 p-10 rounded-lg">
             <h2 className="text-3xl font-bold text-white title-font mb-2">
               {data[0]?.title}
             </h2>

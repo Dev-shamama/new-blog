@@ -10,9 +10,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
         const { slug } = req.query
         const receiveData = req.body;
-        console.log(receiveData)
         await connectDB()
-        const data = {
+        const childrenData = {
             title: receiveData.title,
             slug: receiveData.slug,
         }
@@ -21,7 +20,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         tutorialList[0].list.filter((item: any) => {
             if (item._id.toString() === receiveData.id) {
-                item.children.push(data);
+                const data = item.children.filter((existSlug: any) => {
+                    if (existSlug.slug === receiveData.slug) {
+                        return true
+                    } else {
+                        return false
+                    }
+                })
+                if (data.length > 0) {
+                    return res.status(401).json({ success: false, message: "slug is already exist" });
+                } else {
+                    item.children.push(childrenData);
+
+                }
+
             }
         })
 

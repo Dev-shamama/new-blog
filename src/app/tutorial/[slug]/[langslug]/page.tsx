@@ -90,8 +90,8 @@ const Html = async ({ params }: { params: SlugType }) => {
             })}
           </ul>
         </div>
-        <section className="container p-10 mx-auto overflow-auto">
-          <div className="container">
+        <section className="container p-5 mx-auto overflow-auto ">
+          <div className="container p-5 bg-gray-800 rounded-lg">
             <MDXComponents source={content?.data[0]?.content} />
           </div>
         </section>
