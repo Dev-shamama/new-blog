@@ -6,8 +6,8 @@ import {
   ButtonDeleteHeadingList,
   ButtonHeadingUpdate,
   ButtonUpdateHeadingList,
+  LanguageListHeadingCreate,
 } from "@/components/ClientComponents";
-import { revalidateTag } from "next/cache";
 import React from "react";
 
 export interface SlugType {
@@ -15,98 +15,49 @@ export interface SlugType {
 }
 
 const getTutorialHeading = async (params: any) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistget/${params.slug}`,
-    {
-      method: "GET",
-      next: {
-        tags: ["change"],
-      },
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languagesingle?lang=${params.slug}`,
+      {
+        method: "GET",
+        cache: "no-cache",
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`Request failed with status: ${res.status}`);
     }
-  );
-  const result = await res.json();
-  return result;
+    const result = await res.json();
+    return result.data;
+  } catch (error) {
+    console.error("Error fetching blog data:", error);
+    return []; // Return an empty array or handle the error appropriately
+  }
 };
 
 const page = async ({ params }: { params: SlugType }) => {
   const data = await getTutorialHeading(params);
+
   return (
     <>
       <section className="text-gray-400 bg-gray-900 body-font overflow-auto">
         <div className="container p-10 mx-auto overflow-auto">
-          <form
-            // action={createListAdd}
-            className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full mt-10 mb-10"
-          >
-            <div className="flex flex-row justify-between">
-              <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-white">
-                Language Tutorial List Add
-              </h1>
-            </div>
-            <input type="hidden" value={params.slug} name="id" />
 
-            <div className="relative mb-4">
-              <label
-                htmlFor="heading"
-                className="leading-7 text-sm text-gray-400"
-              >
-                Heading
-              </label>
-              <input
-                type="text"
-                id="heading"
-                name="heading"
-                className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-              />
-            </div>
-
-            <div className="relative mb-4">
-              <label
-                htmlFor="title"
-                className="leading-7 text-sm text-gray-400"
-              >
-                Title
-              </label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-              />
-            </div>
-
-            <div className="relative mb-4">
-              <label htmlFor="slug" className="leading-7 text-sm text-gray-400">
-                Slug
-              </label>
-              <input
-                type="text"
-                id="slug"
-                name="slug"
-                className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
-            >
-              Add
-            </button>
-          </form>
+          <LanguageListHeadingCreate paramSlug={params.slug} />
+          
 
           <div className="flex flex-row justify-between w-full mb-5">
             <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-white">
-              Language Tutorial List Detail {data.data[0].language}
+              Language Tutorial List Detail {data.language}
             </h1>
           </div>
 
           <div className="w-full mx-auto overflow-auto">
-            {data &&
-              data?.data &&
-              data?.data[0]?.list.map((item: any, index: number) => {
+            {data[0]?.list.length === 0 ? (
+              <h1>Not Found</h1>
+            ) : (
+              data[0]?.list.map((item: any, index: number) => {
                 return (
-                  <div  key={index}>
+                  <div key={index}>
                     <div className="flex flex-row items-center gap-2">
                       <ButtonHeadingUpdate
                         heading={item?.heading}
@@ -166,7 +117,8 @@ const page = async ({ params }: { params: SlugType }) => {
                     </table>
                   </div>
                 );
-              })}
+              })
+            )}
           </div>
         </div>
       </section>

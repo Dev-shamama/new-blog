@@ -1,5 +1,5 @@
 import connectDB from "@/config/db";
-import Blog from "@/model/Blog";
+import TutorialHeadingList from "@/model/TutorialHeadingList";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -9,22 +9,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ success: false, message: "METHOD NOT ALLOWED" });
         }
 
-        const receiveData = JSON.parse(req.body);
-        console.log(receiveData);
-
+        const receiveData = req.body;
+        console.log(receiveData)
         await connectDB()
 
-        const data = new Blog({
-            title: receiveData.title,
-            description: receiveData.description,
-            author: receiveData.author,
-            slug: receiveData.slug,
-            content: receiveData.content,
-        });
+        const data = new TutorialHeadingList({
+            language: receiveData.language,
+          })
         const result = await data.save();
 
-
-        return res.status(201).json({ success: true, message: "Blog Created Successfully", data: result});
+        return res.status(201).json({ success: true, message: "Language Create Successfully", data: result});
     } catch (error: any) {
         return res.status(500).json({ success: false, message: error.message });
     }

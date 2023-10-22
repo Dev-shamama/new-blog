@@ -5,12 +5,23 @@ import Link from "next/link";
 import React from "react";
 
 const getBlog = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogget`, {
-    method: "GET",
-    cache: "no-cache"
-  });
-  const result = await res.json();
-  return result.data;
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogget`,
+      {
+        method: "GET",
+        cache: "no-cache",
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`Request failed with status: ${res.status}`);
+    }
+    const result = await res.json();
+    return result.data;
+  } catch (error) {
+    console.error("Error fetching blog data:", error);
+    return []; // Return an empty array or handle the error appropriately
+  }
 };
 
 

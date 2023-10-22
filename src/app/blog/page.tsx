@@ -5,14 +5,25 @@ import Link from "next/link";
 import { ArrowRight } from "@/components/Icon";
 import readingTime from "reading-time";
 
-const getBlogData = async () =>{
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/blogget`, {
-    method: "GET",
-    cache: "no-cache",
-  });
-  const result = await res.json();
-  return result.data
-}
+const getBlogData = async () => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogget`,
+      {
+        method: "GET",
+        cache: "no-cache",
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`Request failed with status: ${res.status}`);
+    }
+    const result = await res.json();
+    return result.data;
+  } catch (error) {
+    console.error("Error fetching blog data:", error);
+    return []; // Return an empty array or handle the error appropriately
+  }
+};
 
 const Fblog = async () => {
   const data = await getBlogData();
@@ -24,13 +35,12 @@ const Fblog = async () => {
           <div className="-my-8 divide-y-2 divide-gray-800">
             <div className="py-8 flex flex-col flex-wrap md:flex-nowrap">
               {data && data.length === 0 ? (
-                <div
-                  className="md:flex-grow  mb-6 bg-slate-700 p-6"
-                >
+                <div className="md:flex-grow  mb-6 bg-slate-700 p-6">
                   <h1>Not Found</h1>
                 </div>
               ) : (
-                data && data.map((item: any) => (
+                data &&
+                data.map((item: any) => (
                   <div
                     className="md:flex-grow  mb-6 bg-slate-700 p-6"
                     key={item._id}

@@ -1,14 +1,12 @@
 "use client";
 
-import { revalidateTag } from "next/cache";
 import { Chat, FaceBook, Instagram, Twitter } from "./Icon";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { FormEvent, useState, useTransition } from "react";
 import { toast } from "react-toastify";
 
-// import { AddHeadingList } from "@/actions/serverAction";
-
+// LIST HEADING UPDATE
 const ButtonHeadingUpdate = (props: any) => {
   const [show, setShow] = useState(true);
   const [heading, setHeading] = useState(props.heading);
@@ -19,9 +17,9 @@ const ButtonHeadingUpdate = (props: any) => {
 
   const updateHeading = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistupdateHeading/${props.id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingupdate?slug=${props.id}`,
       {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify({ id: props.headingId, heading }),
         headers: { "content-type": "application/json" },
       }
@@ -68,11 +66,12 @@ const ButtonHeadingUpdate = (props: any) => {
   );
 };
 
+// LIST HEADING DELETE
 const ButtonDelete = (props: any) => {
   const router = useRouter();
   const DeleteHeading = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistupdateHeading/${props.id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingdelete?slug=${props.id}`,
       {
         method: "DELETE",
         body: JSON.stringify({
@@ -97,9 +96,9 @@ const ButtonDelete = (props: any) => {
   );
 };
 
+// LIST HEADING ADD
 const ButtonAdd = (props: any) => {
-  const [isPending, startTransition] = useTransition();
-
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   const [title, setTitle] = useState("");
@@ -113,20 +112,26 @@ const ButtonAdd = (props: any) => {
     setIsOpen(true);
   };
 
-  // const someNew = () => {
-  //   startTransition(async () => {
-  //     const result = await AddHeadingList(formData);
-  //     if (result?.success === true) {
-  //       setIsOpen(false);
-  //     }
-  //   });
-  // };
-
-  const formData = new FormData();
-  formData.append("id", props.id);
-  formData.append("headingId", props.headingId);
-  formData.append("title", title);
-  formData.append("slug", slug);
+  const AddHeadingList = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingchildrencreate?slug=${props.id}`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          id: props.headingId,
+          title: title,
+          slug: slug,
+        }),
+        headers: { "content-type": "application/json" },
+      }
+    );
+    const result = await res.json();
+    if (result.success === true) {
+      router.refresh();
+      setIsOpen(false);
+    }
+  };
 
   return (
     <>
@@ -144,7 +149,10 @@ const ButtonAdd = (props: any) => {
               <h2 className="text-2xl font-bold mb-4">
                 Language Tutorial List Add
               </h2>
-              <form className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full mt-10 mb-10">
+              <form
+                className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full mt-10 mb-10"
+                onSubmit={AddHeadingList}
+              >
                 <div className="relative mb-4">
                   <label
                     htmlFor="title"
@@ -180,8 +188,7 @@ const ButtonAdd = (props: any) => {
                 </div>
 
                 <button
-                  type="button"
-                  // onClick={someNew}
+                  type="submit"
                   className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
                 >
                   Add
@@ -202,11 +209,12 @@ const ButtonAdd = (props: any) => {
   );
 };
 
+// LIST HEADING DELETE
 const ButtonDeleteHeadingList = (props: any) => {
   const router = useRouter();
   const DeleteHeadingList = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistaddconcept/${props.slugId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingchildrendelete?slug=${props.slugId}`,
       {
         method: "DELETE",
         body: JSON.stringify({
@@ -218,6 +226,7 @@ const ButtonDeleteHeadingList = (props: any) => {
       }
     );
     const result = await res.json();
+    console.log(result);
     if (result.success === true) {
       router.refresh();
     }
@@ -233,7 +242,6 @@ const ButtonDeleteHeadingList = (props: any) => {
 };
 
 const ButtonAddContent = (props: any) => {
-  const router = useRouter();
   return (
     <Link
       href={`./${props.slugId}/${props.slug}`}
@@ -262,7 +270,8 @@ const ButtonUpdateHeadingList = (props: any) => {
   const UpdateHeadingList = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/tutoriallistupdate/${props.slugId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingchildrenupdate?slug=${props.slugId}`,
+
       {
         method: "PUT",
         body: JSON.stringify({
@@ -412,7 +421,7 @@ const BlogUpdateForm = (props: any) => {
     if (result) {
       toast.success(result.message);
       router.refresh();
-      router.push('/admin/blog');
+      router.push("/admin/blog");
     }
   };
 
@@ -530,7 +539,7 @@ const ButtonLanguageUpdate = (props: any) => {
   const UpdateHeadingList = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/${props.langId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languageupdate?id=${props.langId}`,
       {
         method: "PUT",
         body: JSON.stringify({
@@ -612,7 +621,7 @@ const ButtonLanguageDelete = (props: any) => {
   const DeleteLanguage = async (slug: any) => {
     if (confirm("Are You Sure?")) {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistcreate/${slug}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languagedelete?id=${slug}`,
         {
           method: "DELETE",
         }
@@ -756,7 +765,7 @@ const CreateBlogPost = () => {
   const createPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/sblogcreate`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogcreate`,
       {
         method: "POST",
         body: JSON.stringify({ description, author, content, title, slug }),
@@ -869,6 +878,194 @@ const CreateBlogPost = () => {
   );
 };
 
+const TutorialLanguage = () => {
+  const router = useRouter();
+  const [language, setLanguage] = useState("");
+  const createLanguage = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languagecreate`,
+      {
+        method: "POST",
+        body: JSON.stringify({ language }),
+        headers: { "content-type": "application/json" },
+      }
+    );
+    const result = await res.json();
+    console.log(result);
+    if (result.success === true) {
+      router.refresh();
+      router.push("/admin/tutoriallist");
+    }
+  };
+  return (
+    <form onSubmit={createLanguage}>
+      <div className="relative mb-4">
+        <label htmlFor="language" className="leading-7 text-sm text-gray-400">
+          Language
+        </label>
+        <input
+          type="text"
+          id="language"
+          name="language"
+          className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+        />
+      </div>
+      <button
+        type="submit"
+        className="ml-auto text-white bg-indigo-500 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded"
+      >
+        Add
+      </button>
+    </form>
+  );
+};
+
+const LanguageListHeadingCreate = ({ paramSlug }: { paramSlug: string }) => {
+  const router = useRouter();
+  const [heading, setHeading] = useState("");
+  const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+
+  const createListAdd = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingcreate?slug=${paramSlug}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ heading, title, slug }),
+        headers: { "content-type": "application/json" },
+      }
+    );
+    const result = await res.json();
+    if (result.success === true) {
+      router.refresh();
+    }
+  };
+
+  return (
+    <form
+      onSubmit={createListAdd}
+      className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full mt-10 mb-10"
+    >
+      <div className="flex flex-row justify-between">
+        <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-white">
+          Language Tutorial List Add
+        </h1>
+      </div>
+
+      <div className="relative mb-4">
+        <label htmlFor="heading" className="leading-7 text-sm text-gray-400">
+          Heading
+        </label>
+        <input
+          type="text"
+          id="heading"
+          name="heading"
+          value={heading}
+          onChange={(e) => setHeading(e.target.value)}
+          className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+      </div>
+
+      <div className="relative mb-4">
+        <label htmlFor="title" className="leading-7 text-sm text-gray-400">
+          Title
+        </label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+      </div>
+
+      <div className="relative mb-4">
+        <label htmlFor="slug" className="leading-7 text-sm text-gray-400">
+          Slug
+        </label>
+        <input
+          type="text"
+          id="slug"
+          name="slug"
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+          className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+      </div>
+
+      <button
+        type="submit"
+        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+      >
+        Add
+      </button>
+    </form>
+  );
+};
+
+const ContentCreate = ({contentSlug, itemContent}:{contentSlug: string, itemContent: string}) => {
+  const router = useRouter();
+  const [content, setContent] = useState(itemContent);
+
+  const createContent = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/tutorialcontent/contentcreate`,
+      {
+        method: "POST",
+        body: JSON.stringify({ content, slugTitle: contentSlug }),
+        headers: { "content-type": "application/json" },
+      }
+    );
+    const result = await res.json();
+    if (result) {
+      router.refresh()
+    }
+  };
+  return (
+    <form
+      onSubmit={createContent}
+      className="bg-opacity-50 rounded-lg flex flex-col md:ml-auto w-full mt-10 mb-10"
+    >
+      <div className="flex flex-row justify-between">
+        <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-white">
+          Add Content
+        </h1>
+      </div>
+
+      <div className="p-2 w-full">
+        <div className="relative">
+          <label
+            htmlFor="content"
+            className="leading-7 text-sm text-gray-400"
+          ></label>
+          <textarea
+            id="content"
+            name="content"
+            className="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:bg-gray-900 focus:ring-2 focus:ring-indigo-900 h-32 text-base outline-none text-gray-100 py-1 px-3 resize-y leading-6 transition-colors duration-200 ease-in-out"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          >
+            {itemContent}
+          </textarea>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        className={`border-0 py-2 px-8 focus:outline-none  rounded text-lg text-white bg-indigo-600`}
+      >
+        Add / Update
+      </button>
+    </form>
+  );
+};
+
 export {
   ButtonHeadingUpdate,
   ButtonDelete,
@@ -882,4 +1079,7 @@ export {
   ButtonLanguageDelete,
   ContactForm,
   CreateBlogPost,
+  TutorialLanguage,
+  LanguageListHeadingCreate,
+  ContentCreate,
 };

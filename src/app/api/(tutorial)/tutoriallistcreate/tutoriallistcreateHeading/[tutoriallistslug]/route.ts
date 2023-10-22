@@ -5,9 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest, { params }: { params: any }) {
     const slug = params.tutoriallistslug;
-    
-    // console.log("=====================================================slug");
-    // console.log(slug);
     const req = await request.json();
     await connectDB();
 

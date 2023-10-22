@@ -5,21 +5,28 @@ import {
 import Link from "next/link";
 import React from "react";
 
-// const getTutorialList = async () => {
-//   // "use server"
-//   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistget`, {
-//     method: "GET",
-//     cache: "no-cache",
-//     next: {
-//       tags: ['tutorial']
-//     }
-//   });
-//   const result = await res.json();
-//   return result;
-// };
+const getLanguage = async () => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languageget`,
+      {
+        method: "GET",
+        cache: "no-cache",
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`Request failed with status: ${res.status}`);
+    }
+    const result = await res.json();
+    return result.data;
+  } catch (error) {
+    console.error("Error fetching blog data:", error);
+    return []; // Return an empty array or handle the error appropriately
+  }
+};
 
 const TutorialList = async () => {
-  // const result =  await getTutorialList()
+  const result =  await getLanguage()
   
   return (
     <section className="text-gray-400 bg-gray-900 body-font overflow-auto">
@@ -53,13 +60,13 @@ const TutorialList = async () => {
                 </th>
               </tr>
             </thead>
-            {/* <tbody className="m-3">
-              {result?.data && result?.data?.length === 0 ? (
+            <tbody className="m-3">
+              {result && result?.length === 0 ? (
                 <div className="md:flex-grow  mb-6 bg-slate-700 p-6">
                   <h1>Not Found</h1>
                 </div>
               ) : (
-                result?.data.map((item: any, index: number) => {
+                result.map((item: any, index: number) => {
                   return (
                     <tr key={item._id}>
                       <td className="px-4 py-3">{index + 1}</td>
@@ -84,7 +91,7 @@ const TutorialList = async () => {
                   );
                 })
               )}
-            </tbody> */}
+            </tbody>
           </table>
         </div>
       </div>
