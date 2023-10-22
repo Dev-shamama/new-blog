@@ -31,6 +31,7 @@ const TutorialList = async () => {
   return (
     <section className="text-gray-400 bg-gray-900 body-font overflow-auto">
       <div className="container p-10 mx-auto">
+        
         <div className="flex flex-row items-center justify-between w-full mb-5">
           <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-white">
             Language Tutorial List
@@ -42,6 +43,7 @@ const TutorialList = async () => {
             Add Language
           </Link>
         </div>
+
         <div className="w-full mx-auto overflow-auto">
           <table className="table-auto w-full text-left whitespace-no-wrap">
             <thead>

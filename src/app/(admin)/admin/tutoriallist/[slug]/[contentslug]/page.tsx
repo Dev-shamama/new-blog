@@ -28,13 +28,14 @@ const getContent = async (slug: any) => {
 
 const ContentData = async ({ params }: { params: any }) => {
   const contentData: any = await getContent(params?.contentslug);
-  console.log(contentData)
   return (
     <>
       <section className="overflow-auto">
         <div className="container p-10 mx-auto overflow-auto">
           <ContentCreate
-            itemContent={contentData?.data[0]?.content ? contentData?.data[0]?.content : ""}
+            itemContent={
+              contentData?.data[0]?.content ? contentData?.data[0]?.content : ""
+            }
             contentSlug={params?.contentslug}
           />
 
@@ -46,7 +47,9 @@ const ContentData = async ({ params }: { params: any }) => {
 
           <div className="container">
             {contentData.data.length === 0 ? (
-              <h1>Data Not Found!</h1>
+              <div className="md:flex-grow  text-lg bg-slate-600 p-6 text-white">
+                <h1>No Content Yet</h1>
+              </div>
             ) : (
               <MDXComponents source={contentData?.data[0]?.content} />
             )}

@@ -41,19 +41,19 @@ const page = async ({ params }: { params: SlugType }) => {
     <>
       <section className="text-gray-400 bg-gray-900 body-font overflow-auto">
         <div className="container p-10 mx-auto overflow-auto">
-
           <LanguageListHeadingCreate paramSlug={params.slug} />
-          
 
           <div className="flex flex-row justify-between w-full mb-5">
             <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-white">
-              Language Tutorial List Detail {data.language}
+              Language Tutorial List Detail {data[0].language}
             </h1>
           </div>
 
           <div className="w-full mx-auto overflow-auto">
             {data[0]?.list.length === 0 ? (
-              <h1>Not Found</h1>
+              <div className="md:flex-grow  text-lg bg-slate-600 p-6 text-white">
+                <h1>No Data Found Yet</h1>
+              </div>
             ) : (
               data[0]?.list.map((item: any, index: number) => {
                 return (

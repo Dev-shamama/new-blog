@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  ContactValidateSchema,
+  AddLanguageValidateSchema,
+  ListHeadingValidateSchema,
+  ListHeadingChildrenValidateSchema,
+  BlogValidateSchema,
+} from "@/validator/Validator";
 import { Chat, FaceBook, Instagram, Twitter } from "./Icon";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -70,19 +77,21 @@ const ButtonHeadingUpdate = (props: any) => {
 const ButtonDelete = (props: any) => {
   const router = useRouter();
   const DeleteHeading = async () => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingdelete?slug=${props.id}`,
-      {
-        method: "DELETE",
-        body: JSON.stringify({
-          id: props.headingId,
-        }),
-        headers: { "content-type": "application/json" },
+    if (confirm("Are You Sure ?")) {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingdelete?slug=${props.id}`,
+        {
+          method: "DELETE",
+          body: JSON.stringify({
+            id: props.headingId,
+          }),
+          headers: { "content-type": "application/json" },
+        }
+      );
+      const result = await res.json();
+      if (result.success === true) {
+        router.refresh();
       }
-    );
-    const result = await res.json();
-    if (result.success === true) {
-      router.refresh();
     }
   };
 
@@ -114,22 +123,35 @@ const ButtonAdd = (props: any) => {
 
   const AddHeadingList = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingchildrencreate?slug=${props.id}`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          id: props.headingId,
-          title: title,
-          slug: slug,
-        }),
-        headers: { "content-type": "application/json" },
+
+    const { error, value }: { error: any; value: any } =
+      ListHeadingChildrenValidateSchema.validate({
+        title,
+        slug,
+      });
+
+    const slugModify = value.slug.split(" ").join("-");
+
+    if (error !== undefined) {
+      toast.error(error.message);
+    } else {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingchildrencreate?slug=${props.id}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            id: props.headingId,
+            title: value.title,
+            slug: slugModify,
+          }),
+          headers: { "content-type": "application/json" },
+        }
+      );
+      const result = await res.json();
+      if (result.success === true) {
+        router.refresh();
+        setIsOpen(false);
       }
-    );
-    const result = await res.json();
-    if (result.success === true) {
-      router.refresh();
-      setIsOpen(false);
     }
   };
 
@@ -213,22 +235,23 @@ const ButtonAdd = (props: any) => {
 const ButtonDeleteHeadingList = (props: any) => {
   const router = useRouter();
   const DeleteHeadingList = async () => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingchildrendelete?slug=${props.slugId}`,
-      {
-        method: "DELETE",
-        body: JSON.stringify({
-          id: props.listId,
-          headingId: props.headingId,
-          contentSlug: props.contentSlug,
-        }),
-        headers: { "content-type": "application/json" },
+    if (confirm("Are You Sure ?")) {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingchildrendelete?slug=${props.slugId}`,
+        {
+          method: "DELETE",
+          body: JSON.stringify({
+            id: props.listId,
+            headingId: props.headingId,
+            contentSlug: props.contentSlug,
+          }),
+          headers: { "content-type": "application/json" },
+        }
+      );
+      const result = await res.json();
+      if (result.success === true) {
+        router.refresh();
       }
-    );
-    const result = await res.json();
-    console.log(result);
-    if (result.success === true) {
-      router.refresh();
     }
   };
   return (
@@ -380,7 +403,6 @@ const ButtonDeleteBlog = ({ id }: { id: string }) => {
         }
       );
       const result = await res.json();
-      console.log(result);
       if (result) {
         toast.success(result.message);
         router.refresh();
@@ -538,20 +560,28 @@ const ButtonLanguageUpdate = (props: any) => {
 
   const UpdateHeadingList = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languageupdate?id=${props.langId}`,
-      {
-        method: "PUT",
-        body: JSON.stringify({
-          language: language,
-        }),
-        headers: { "content-type": "application/json" },
+
+    const { error }: { error: any } = AddLanguageValidateSchema.validate({
+      language,
+    });
+    if (error !== undefined) {
+      toast.error(error.message);
+    } else {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languageupdate?id=${props.langId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            language: language.toLowerCase(),
+          }),
+          headers: { "content-type": "application/json" },
+        }
+      );
+      const result = await res.json();
+      if (result.success == true) {
+        router.refresh();
+        setIsOpen(false);
       }
-    );
-    const result = await res.json();
-    if (result.success == true) {
-      router.refresh();
-      setIsOpen(false);
     }
   };
 
@@ -650,20 +680,31 @@ const ContactForm = () => {
 
   const contactPostHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/contact/create`,
-      {
-        method: "POST",
-        body: JSON.stringify({ name, email, message }),
-        headers: { "content-type": "application/json" },
+
+    const { error }: { error: any } = ContactValidateSchema.validate({
+      name,
+      email,
+      message,
+    });
+
+    if (error !== undefined) {
+      toast.error(error.message);
+    } else {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/contact/contactcreate`,
+        {
+          method: "POST",
+          body: JSON.stringify({ name, email, message }),
+          headers: { "content-type": "application/json" },
+        }
+      );
+      const result = await res.json();
+      if (result.success === true) {
+        toast.success(result.message);
+        setName("");
+        setEmail("");
+        setMessage("");
       }
-    );
-    const result = await res.json();
-    if (result.success === true) {
-      toast.success(result.message);
-      setName("");
-      setEmail("");
-      setMessage("");
     }
   };
 
@@ -764,11 +805,27 @@ const CreateBlogPost = () => {
 
   const createPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const { error, value }: { error: any, value: any } = BlogValidateSchema.validate({
+      title,
+      description,
+      author,
+      slug,
+      content,
+    });
+
+    const slugModify = value.slug.split(" ").join("-");
+    const authorModify = value.author.split(" ").join("");
+    console.log(authorModify)
+
+    if (error !== undefined) {
+      toast.error(error.message);
+    } else {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogcreate`,
       {
         method: "POST",
-        body: JSON.stringify({ description, author, content, title, slug }),
+        body: JSON.stringify({ description, author: authorModify, content, title, slug: slugModify }),
       }
     );
     const result = await res.json();
@@ -776,6 +833,7 @@ const CreateBlogPost = () => {
       router.refresh();
       toast.success(result.message);
     }
+  }
   };
 
   return (
@@ -883,19 +941,27 @@ const TutorialLanguage = () => {
   const [language, setLanguage] = useState("");
   const createLanguage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languagecreate`,
-      {
-        method: "POST",
-        body: JSON.stringify({ language }),
-        headers: { "content-type": "application/json" },
+
+    const { error, value }: { error: any; value: any } =
+      AddLanguageValidateSchema.validate({
+        language,
+      });
+    if (error !== undefined) {
+      toast.error(error.message);
+    } else {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languagecreate`,
+        {
+          method: "POST",
+          body: JSON.stringify({ language: value.language }),
+          headers: { "content-type": "application/json" },
+        }
+      );
+      const result = await res.json();
+      if (result.success === true) {
+        router.refresh();
+        router.push("/admin/tutoriallist");
       }
-    );
-    const result = await res.json();
-    console.log(result);
-    if (result.success === true) {
-      router.refresh();
-      router.push("/admin/tutoriallist");
     }
   };
   return (
@@ -931,17 +997,31 @@ const LanguageListHeadingCreate = ({ paramSlug }: { paramSlug: string }) => {
 
   const createListAdd = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingcreate?slug=${paramSlug}`,
-      {
-        method: "POST",
-        body: JSON.stringify({ heading, title, slug }),
-        headers: { "content-type": "application/json" },
+
+    const { error, value }: { error: any; value: any } =
+      ListHeadingValidateSchema.validate({
+        heading,
+        title,
+        slug,
+      });
+
+    const slugModify = value.slug.split(" ").join("-");
+
+    if (error !== undefined) {
+      toast.error(error.message);
+    } else {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/listheading/listheadingcreate?slug=${paramSlug}`,
+        {
+          method: "POST",
+          body: JSON.stringify({ heading, title, slug: slugModify }),
+          headers: { "content-type": "application/json" },
+        }
+      );
+      const result = await res.json();
+      if (result.success === true) {
+        router.refresh();
       }
-    );
-    const result = await res.json();
-    if (result.success === true) {
-      router.refresh();
     }
   };
 
@@ -1008,7 +1088,13 @@ const LanguageListHeadingCreate = ({ paramSlug }: { paramSlug: string }) => {
   );
 };
 
-const ContentCreate = ({contentSlug, itemContent}:{contentSlug: string, itemContent: string}) => {
+const ContentCreate = ({
+  contentSlug,
+  itemContent,
+}: {
+  contentSlug: string;
+  itemContent: string;
+}) => {
   const router = useRouter();
   const [content, setContent] = useState(itemContent);
 
@@ -1024,7 +1110,7 @@ const ContentCreate = ({contentSlug, itemContent}:{contentSlug: string, itemCont
     );
     const result = await res.json();
     if (result) {
-      router.refresh()
+      router.refresh();
     }
   };
   return (

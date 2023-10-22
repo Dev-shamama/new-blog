@@ -19,10 +19,10 @@ export interface ImageTutorialType {
 const Tutorial = () => {
   const tutorialData = [
     { id: 1, href: "/tutorial/html/html_default", language: "HTML", image: HtmlLogo },
-    { id: 2, href: "#", language: "CSS", image: CssLogo },
-    { id: 3, href: "#", language: "JavaScript", image: JavascriptLogo },
-    { id: 4, href: "#", language: "PHP", image: PhpLogo },
-    { id: 5, href: "#", language: "MySQL", image: MysqlLogo },
+    { id: 2, href: "/tutorial/css/css_default", language: "CSS", image: CssLogo },
+    { id: 3, href: "/tutorial/javascript/javascript_default", language: "JavaScript", image: JavascriptLogo },
+    // { id: 4, href: "#", language: "PHP", image: PhpLogo },
+    // { id: 5, href: "#", language: "MySQL", image: MysqlLogo },
   ];
 
   return (

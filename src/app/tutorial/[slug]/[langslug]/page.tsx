@@ -10,30 +10,44 @@ export interface SlugType {
 }
 
 const getTutorialHeading = async (params: any) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutoriallistget/${params}`,
-    {
-      method: "GET",
-      cache: "no-cache",
-      next: {
-        tags: ["change"],
-      },
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/languagesingle?lang=${params}`,
+      {
+        method: "GET",
+        cache: "no-cache",
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`Request failed with status: ${res.status}`);
     }
-  );
-  const result = await res.json();
-  return result;
+    const result = await res.json();
+    return result
+  } catch (error) {
+    console.error("Error fetching blog data:", error);
+    return []; // Return an empty array or handle the error appropriately
+  }
+
 };
 
 const getContent = async (slug: any) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorialcontentget/${slug}`,
-    {
-      method: "GET",
-      cache: "no-cache",
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tutorial/tutorialcontent/contentget?slug=${slug}`,
+      {
+        method: "GET",
+        cache: "no-cache",
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`Request failed with status: ${res.status}`);
     }
-  );
-  const result = await res.json();
-  return result;
+    const result = await res.json();
+    return result
+  } catch (error) {
+    console.error("Error fetching blog data:", error);
+    return []; // Return an empty array or handle the error appropriately
+  }
 };
 
 const Html = async ({ params }: { params: SlugType }) => {

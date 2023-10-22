@@ -1,21 +1,26 @@
 import connectDB from "@/config/db";
-import TutorialContent from "@/model/TutorialContent";
+import Contact from "@/model/Contact";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         // Not Exist Method == POST Condition
-
-        if (req.method !== "GET") {
+        if (req.method !== "POST") {
             return res.status(400).json({ success: false, message: "METHOD NOT ALLOWED" });
         }
 
-        const { slug } = req.query;
-        console.log(slug);
-        await connectDB()
-        const result = await TutorialContent.find({ slugTitle: slug });
-        return res.status(200).json({ success: true, data: result })
+        const receiveData = req.body;
 
+        await connectDB()
+
+        const data = new Contact({
+            name: receiveData.name,
+            email: receiveData.email,
+            message: receiveData.message,
+        })
+        await data.save();
+
+        return res.status(201).json({ success: true, message: "Admin Contact Successfully"});
     } catch (error: any) {
         return res.status(500).json({ success: false, message: error.message });
     }

@@ -1,5 +1,4 @@
 import React from "react";
-import { Chat, FaceBook, Instagram, Twitter } from "./Icon";
 import { ContactForm } from "./ClientComponents";
 
 const Contact = async () => {
