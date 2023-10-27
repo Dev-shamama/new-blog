@@ -21,6 +21,15 @@ const blogSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    userId: {
+        type: String,
+        ref: "user"
+    },
+    status: {
+        type: String,
+        enum: ["PUBLIC", "PRIVATE"],
+        default: "PUBLIC"
+    },
     createAt: {
         type: Date,
         default: Date.now()

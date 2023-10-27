@@ -1,16 +1,19 @@
-import connectDB from "@/config/db";
 import Blog from "@/model/Blog";
+import { isLogged } from "@/utils/isLogged";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    // Not Exist Method == POST Condition
+    if (req.method !== "GET") {
+        return res.status(400).json({ success: false, message: "METHOD NOT ALLOWED" });
+    }
+    
     try {
-        // Not Exist Method == POST Condition
-        if (req.method !== "GET") {
-            return res.status(400).json({ success: false, message: "METHOD NOT ALLOWED" });
-        }
 
-        await connectDB()
-        const result = await Blog.find().where({status: "PUBLIC"});
+        const user = await isLogged(req, res);
+
+        const result = await Blog.find({ userId: user._id });
+
         return res.status(200).json({ success: true, data: result })
 
     } catch (error: any) {

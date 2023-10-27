@@ -24,9 +24,10 @@ export const ListHeadingChildrenValidateSchema = Joi.object({
 export const BlogValidateSchema = Joi.object({
     title: Joi.string().min(3).trim(true).required(),
     description: Joi.string().min(10).trim(true).required(),
-    author: Joi.string().lowercase().trim(true).required(),
+    author: Joi.string().required(),
     slug: Joi.string().lowercase().min(3).trim(true).required(),
     content: Joi.string().min(30).trim(true).required(),
+    status: Joi.string().required(),
 })
 
 

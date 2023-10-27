@@ -1,5 +1,5 @@
 "use client";
-
+import { cookies } from "next/headers";
 import {
   ContactValidateSchema,
   AddLanguageValidateSchema,
@@ -10,8 +10,9 @@ import {
 import { Chat, FaceBook, Instagram, Twitter } from "./Icon";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { FormEvent, useState, useTransition } from "react";
+import React, { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
+import { useAuth } from "@/context/AuthContext";
 
 // LIST HEADING UPDATE
 const ButtonHeadingUpdate = (props: any) => {
@@ -70,9 +71,7 @@ const ButtonHeadingUpdate = (props: any) => {
         </span>
       ) : (
         <button
-        
-
-          className="bg-indigo-400 text-white font-semibold py-2 px-4 rounded-full cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white"
+          className="bg-indigo-400 text-white font-semibold py-2 px-4 rounded-full cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500"
           onClick={updateHeading}
           disabled={isDisable}
         >
@@ -232,7 +231,7 @@ const ButtonAdd = (props: any) => {
                 <button
                   type="submit"
                   disabled={isDisable}
-                  className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
+                  className=" bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
                 >
                   {buttonState}
                 </button>
@@ -305,7 +304,6 @@ const ButtonUpdateHeadingList = (props: any) => {
 
   const [buttonState, setButtonState] = useState("Update");
   const [isDisable, setIsDisable] = useState(false);
-
 
   const closeModal = () => {
     setIsOpen(false);
@@ -400,12 +398,12 @@ const ButtonUpdateHeadingList = (props: any) => {
                 </div>
 
                 <button
-        type="submit"
-        disabled={isDisable}
-        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
-      >
-        {buttonState}
-      </button>
+                  type="submit"
+                  disabled={isDisable}
+                  className="bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
+                >
+                  {buttonState}
+                </button>
               </form>
 
               <button
@@ -457,6 +455,8 @@ const BlogUpdateForm = (props: any) => {
   const [author, setAuthor] = useState(props.author);
   const [slug, setSlug] = useState(props.slug);
   const [content, setContent] = useState(props.content);
+  const [status, setStatus] = useState(props.status);
+
   const [id, setId] = useState(props._id);
 
   const [buttonState, setButtonState] = useState("Update Post");
@@ -470,7 +470,14 @@ const BlogUpdateForm = (props: any) => {
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogupdate?id=${id}`,
       {
         method: "PUT",
-        body: JSON.stringify({ description, author, content, title, slug }),
+        body: JSON.stringify({
+          description,
+          author,
+          content,
+          title,
+          slug,
+          status,
+        }),
         headers: { "content-type": "application/json" },
       }
     );
@@ -528,17 +535,23 @@ const BlogUpdateForm = (props: any) => {
       </div>
 
       <div className="relative mb-4">
-        <label htmlFor="author" className="leading-7 text-sm text-gray-400">
+        <label
+          className="leading-7 text-sm text-gray-400"
+          htmlFor="selectField"
+        >
           Author
         </label>
-        <input
-          type="text"
-          id="author"
-          name="author"
-          value={author}
+        <select
           onChange={(e) => setAuthor(e.target.value)}
-          className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-        />
+          id="selectField"
+          name="selectField"
+          className="text-base leading-8 block w-full py-3 px-3 bg-gray-600 border-gray-300 focus:outline-none focus:ring-indigo-900 focus:border-indigo-600 sm:text-sm rounded-md"
+          value={author}
+        >
+          <option value="">Select Author</option>
+          <option value="SHAMAMA-BIN-SHAKIL">SHAMAMA-BIN-SHAKIL</option>
+          <option value="USMAN">USMAN</option>
+        </select>
       </div>
 
       <div className="relative mb-4">
@@ -553,6 +566,26 @@ const BlogUpdateForm = (props: any) => {
           className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
           onChange={(e) => setSlug(e.target.value)}
         />
+      </div>
+
+      <div className="relative mb-4">
+        <label
+          className="leading-7 text-sm text-gray-400"
+          htmlFor="selectField"
+        >
+          Status (Public / Private)
+        </label>
+        <select
+          onChange={(e) => setStatus(e.target.value)}
+          id="selectField"
+          name="selectField"
+          className="text-base leading-8 block w-full py-3 px-3 bg-gray-600 border-gray-300 focus:outline-none focus:ring-indigo-900 focus:border-indigo-600 sm:text-sm rounded-md"
+          value={status}
+        >
+          <option value="">Select Status</option>
+          <option value="PUBLIC">PUBLIC</option>
+          <option value="PRIVATE">PRIVATE</option>
+        </select>
       </div>
 
       <div className="py-2 w-full">
@@ -574,7 +607,7 @@ const BlogUpdateForm = (props: any) => {
       <button
         type="submit"
         disabled={isDisable}
-        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
+        className="bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
       >
         {buttonState}
       </button>
@@ -671,7 +704,7 @@ const ButtonLanguageUpdate = (props: any) => {
                 <button
                   type="submit"
                   disabled={isDisable}
-                  className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
+                  className="bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
                 >
                   {buttonState}
                 </button>
@@ -847,6 +880,7 @@ const CreateBlogPost = () => {
   const [author, setAuthor] = useState("");
   const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
+  const [status, setStatus] = useState("");
 
   const [buttonState, setButtonState] = useState("Post");
   const [isDisable, setIsDisable] = useState(false);
@@ -861,6 +895,7 @@ const CreateBlogPost = () => {
         author,
         slug,
         content,
+        status,
       });
 
     const slugModify = value.slug.split(" ").join("-");
@@ -881,6 +916,7 @@ const CreateBlogPost = () => {
             content,
             title,
             slug: slugModify,
+            status,
           }),
         }
       );
@@ -940,17 +976,22 @@ const CreateBlogPost = () => {
         </div>
 
         <div className="relative mb-4">
-          <label htmlFor="author" className="leading-7 text-sm text-gray-400">
+          <label
+            className="leading-7 text-sm text-gray-400"
+            htmlFor="selectField"
+          >
             Author
           </label>
-          <input
-            type="text"
-            id="author"
-            name="author"
-            value={author}
+          <select
             onChange={(e) => setAuthor(e.target.value)}
-            className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-          />
+            id="selectField"
+            name="selectField"
+            className="text-base leading-8 block w-full py-3 px-3 bg-gray-600 border-gray-300 focus:outline-none focus:ring-indigo-900 focus:border-indigo-600 sm:text-sm rounded-md"
+          >
+            <option value="">Select Author</option>
+            <option value="SHAMAMA-BIN-SHAKIL">SHAMAMA-BIN-SHAKIL</option>
+            <option value="USMAN">USMAN</option>
+          </select>
         </div>
 
         <div className="relative mb-4">
@@ -965,6 +1006,25 @@ const CreateBlogPost = () => {
             onChange={(e) => setSlug(e.target.value)}
             className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
           />
+        </div>
+
+        <div className="relative mb-4">
+          <label
+            className="leading-7 text-sm text-gray-400"
+            htmlFor="selectField"
+          >
+            Status (Public / Private)
+          </label>
+          <select
+            onChange={(e) => setStatus(e.target.value)}
+            id="selectField"
+            name="selectField"
+            className="text-base leading-8 block w-full py-3 px-3 bg-gray-600 border-gray-300 focus:outline-none focus:ring-indigo-900 focus:border-indigo-600 sm:text-sm rounded-md"
+          >
+            <option value="">Select Status</option>
+            <option value="PUBLIC">PUBLIC</option>
+            <option value="PRIVATE">PRIVATE</option>
+          </select>
         </div>
 
         <div className="py-2 w-full">
@@ -988,7 +1048,7 @@ const CreateBlogPost = () => {
         <button
           type="submit"
           disabled={isDisable}
-          className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
+          className="bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
         >
           {buttonState}
         </button>
@@ -1052,7 +1112,7 @@ const TutorialLanguage = () => {
       <button
         type="submit"
         disabled={isDisable}
-        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
+        className="bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
       >
         {buttonState}
       </button>
@@ -1159,7 +1219,7 @@ const LanguageListHeadingCreate = ({ paramSlug }: { paramSlug: string }) => {
       <button
         type="submit"
         disabled={isDisable}
-        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
+        className="bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
       >
         {buttonState}
       </button>
@@ -1227,15 +1287,96 @@ const ContentCreate = ({
         </div>
       </div>
 
-       <button
+      <button
         type="submit"
         disabled={isDisable}
-        className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
+        className="bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
       >
         {buttonState}
       </button>
     </form>
+  );
+};
 
+const LoginForm = () => {
+  const auth = useAuth();
+  const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [buttonState, setButtonState] = useState("Login");
+  const [isDisable, setIsDisable] = useState(false);
+
+  const LoginHandler = async (e: FormEvent<HTMLFormElement>) => {
+
+    e.preventDefault();
+
+    setButtonState("Loading...");
+    setIsDisable(true);
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`,
+      {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    );
+    const result = await res.json();
+    setButtonState("Login");
+    setIsDisable(false);
+
+    if (result.success === true) {
+      localStorage.setItem("token", result.token);
+      auth?.Login();
+      auth?.setToken(result.token)
+      toast.success(result.message);
+    }
+  };
+
+  return (
+    <form
+      className="lg:w-2/6 md:w-1/2 bg-gray-800 bg-opacity-50 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
+      onSubmit={LoginHandler}
+    >
+      <h2 className="text-white text-lg font-medium title-font mb-5">
+        Sign In
+      </h2>
+      <div className="relative mb-4">
+        <label htmlFor="email" className="leading-7 text-sm text-gray-400">
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+      </div>
+      <div className="relative mb-4">
+        <label htmlFor="password" className="leading-7 text-sm text-gray-400">
+          Password
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+      </div>
+      <button
+        type="submit"
+        disabled={isDisable}
+        className="bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-500 text-white font-semibold"
+      >
+        {buttonState}
+      </button>
+    </form>
   );
 };
 
@@ -1255,4 +1396,5 @@ export {
   TutorialLanguage,
   LanguageListHeadingCreate,
   ContentCreate,
+  LoginForm,
 };

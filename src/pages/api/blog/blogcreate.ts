@@ -1,5 +1,6 @@
 import connectDB from "@/config/db";
 import Blog from "@/model/Blog";
+import { isLogged } from "@/utils/isLogged";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -11,20 +12,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const receiveData = JSON.parse(req.body);
 
-        await connectDB()
+        await connectDB();
+
+        const adminDetail = await isLogged(req, res);
+
 
         const slugExist = await Blog.find({ slug: receiveData.slug })
+
         if (slugExist.length > 0) {
             return res.status(401).json({ success: false, message: "slug is already exist" });
         }
-
 
         const data = new Blog({
             title: receiveData.title,
             description: receiveData.description,
             author: receiveData.author,
             slug: receiveData.slug,
+            status: receiveData.status,
             content: receiveData.content,
+            userId: adminDetail._id,
         });
         const result = await data.save();
 

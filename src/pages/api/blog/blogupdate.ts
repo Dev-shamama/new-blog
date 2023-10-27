@@ -5,11 +5,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    // const { title, text } = JSON.parse(req.body);
     const { id } = req.query;
     const receiveData = req.body;
-    console.log(req.method);
-    // Not Exist Mehthod == POST Condition
+
+    // Not Exist Method == PUT Condition
     
     if (req.method !== "PUT") {
       return errorHandler(res, 400, "ONLY POST METHOD IS ALLOWED");

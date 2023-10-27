@@ -1,4 +1,3 @@
-// import { createPostAction } from "@/actions/serverAction";
 import {
   ButtonDeleteBlog,
   CreateBlogPost,
@@ -6,13 +5,18 @@ import {
 import { ArrowRight } from "@/components/Icon";
 import Link from "next/link";
 import React from "react";
+import { cookies } from "next/headers";
 
-const getBlog = async () => {
+const getBlog = async (token: any) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/blogget`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/blog/admin/adminblogget`,
       {
         method: "GET",
+        headers: {
+          "content-type": "application/json",
+          cookie: `token=${token}`,
+        },
         cache: "no-cache",
       }
     );
@@ -20,6 +24,7 @@ const getBlog = async () => {
       throw new Error(`Request failed with status: ${res.status}`);
     }
     const result = await res.json();
+    // console.log(result);
     return result.data;
   } catch (error) {
     console.error("Error fetching blog data:", error);
@@ -28,11 +33,11 @@ const getBlog = async () => {
 };
 
 const Blog = async () => {
-  const data = await getBlog();
+  const token = cookies().get("token")?.value!;
+  const data = await getBlog(token);
   return (
     <>
-      <section className="text-gray-400 bg-gray-900 body-font overflow-hidden px-24">
-        <div className="container px-5 py-10 mx-auto">
+        <div className="container p-5 mx-auto">
           {/* BLOG CREATE */}
           <div className="mb-10">
             <CreateBlogPost />
@@ -49,12 +54,23 @@ const Blog = async () => {
                 data &&
                 data?.map((item: any) => (
                   <div
-                    className="md:flex-grow  mb-6 bg-slate-700 p-6"
+                    className="md:flex-grow  mb-6 bg-slate-700 p-6 rounded-lg"
                     key={item._id}
                   >
-                    <h2 className="text-2xl font-medium text-white title-font mb-2">
-                      {item.title}
-                    </h2>
+                    <div className="flex flex-row justify-between items-center cursor-default">
+                      <h2 className="text-2xl font-medium text-white title-font mb-2">
+                        {item.title}
+                      </h2>
+                      {item.status !== "PUBLIC" ? (
+                        <p className="text-sm font-medium  py-1 px-2 bg-red-400 rounded-md text-white">
+                          {item.status}
+                        </p>
+                      ) : (
+                        <p className="text-sm font-medium  py-1 px-2 bg-green-400 rounded-md text-white">
+                          {item.status}
+                        </p>
+                      )}
+                    </div>
 
                     <p className="leading-relaxed">{item.description}</p>
                     <Link
@@ -83,7 +99,6 @@ const Blog = async () => {
             </div>
           </div>
         </div>
-      </section>
     </>
   );
 };
